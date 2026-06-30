@@ -67,8 +67,15 @@ public sealed partial class MainWindow : Window
     {
         _zoomFactor = factor;
         if (_webReady)
-            await ContentView.CoreWebView2.ExecuteScriptAsync(
-                $"window.__setZoom && window.__setZoom('{_zoomFactor.ToString(System.Globalization.CultureInfo.InvariantCulture)}')");
+            try
+            {
+                await ContentView.CoreWebView2.ExecuteScriptAsync(
+                    $"window.__setZoom && window.__setZoom('{_zoomFactor.ToString(System.Globalization.CultureInfo.InvariantCulture)}')");
+            }
+            catch
+            {
+                // WebView2が利用不可などのスクリプト実行失敗は無視（テーマ/ズームの見た目のみの影響）
+            }
     }
 
     // 保存済み設定を読み込み、各UIへ適用する（読み込み時は永続化しない）
@@ -178,8 +185,15 @@ public sealed partial class MainWindow : Window
         ThemeToggle.Content = ThemeService.ToggleIcon(mode);
         // WebView2側のCSSも切替
         if (_webReady)
-            await ContentView.CoreWebView2.ExecuteScriptAsync(
-                $"window.__setTheme && window.__setTheme('{ThemeService.ToCssClass(mode)}')");
+            try
+            {
+                await ContentView.CoreWebView2.ExecuteScriptAsync(
+                    $"window.__setTheme && window.__setTheme('{ThemeService.ToCssClass(mode)}')");
+            }
+            catch
+            {
+                // WebView2が利用不可などのスクリプト実行失敗は無視（テーマ/ズームの見た目のみの影響）
+            }
     }
 
     private void OnThemeLight(object s, RoutedEventArgs e) { SetTheme(ThemeMode.Light); PersistSettings(); }
