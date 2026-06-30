@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html class="{{THEME_CLASS}}">
+<head>
+  <meta charset="utf-8">
+  <base href="{{BASE_HREF}}">
+  <!-- テーマ別CSS: クラスで出し分け -->
+  <link rel="stylesheet" href="http://vendor/github-markdown-light.css" id="md-light">
+  <link rel="stylesheet" href="http://vendor/github-markdown-dark.css"  id="md-dark">
+  <link rel="stylesheet" href="http://vendor/github.min.css"      id="hl-light">
+  <link rel="stylesheet" href="http://vendor/github-dark.min.css" id="hl-dark">
+  <link rel="stylesheet" href="http://vendor/katex.min.css">
+  <style>
+    body { margin: 0; }
+    .markdown-body { box-sizing: border-box; max-width: 900px; margin: 0 auto; padding: 24px; }
+    /* テーマ別の表示制御 */
+    html.theme-light #md-dark, html.theme-light #hl-dark { disabled: true; }
+    html.theme-dark  #md-light,html.theme-dark  #hl-light { disabled: true; }
+  </style>
+</head>
+<body>
+  <article class="markdown-body">{{BODY}}</article>
+  <script src="http://vendor/highlight.min.js"></script>
+  <script src="http://vendor/katex.min.js"></script>
+  <script src="http://vendor/auto-render.min.js"></script>
+  <script src="http://vendor/mermaid.min.js"></script>
+  <script>
+    // テーマ別CSSの有効/無効を切替（disabled属性をJSで制御）
+    function applyTheme() {
+      var dark = document.documentElement.classList.contains('theme-dark') ||
+        (document.documentElement.classList.contains('theme-system') &&
+         window.matchMedia('(prefers-color-scheme: dark)').matches);
+      document.getElementById('md-dark').disabled = !dark;
+      document.getElementById('hl-dark').disabled = !dark;
+      document.getElementById('md-light').disabled = dark;
+      document.getElementById('hl-light').disabled = dark;
+    }
+    applyTheme();
+    // コード色付け
+    document.querySelectorAll('pre code').forEach(function (el) { hljs.highlightElement(el); });
+    // 数式
+    renderMathInElement(document.body, {
+      delimiters: [
+        { left: '$$', right: '$$', display: true },
+        { left: '$',  right: '$',  display: false }
+      ]
+    });
+    // Mermaid図
+    mermaid.initialize({ startOnLoad: false, theme: 'default' });
+    mermaid.run({ querySelector: '.mermaid' });
+    // ホスト(C#)からテーマ変更を受けるためのフック
+    window.__setTheme = function (cls) {
+      document.documentElement.className = cls;
+      applyTheme();
+    };
+  </script>
+</body>
+</html>
