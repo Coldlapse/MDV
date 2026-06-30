@@ -1,8 +1,12 @@
+using System.IO;
+using System.Linq;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Web.WebView2.Core;
 using MDV.Core.Models;
 using MDV.Core.Services;
+using Windows.ApplicationModel.DataTransfer;
+using Windows.Storage;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -70,6 +74,14 @@ public sealed partial class MainWindow : Window
         }
     }
 
+    // 起動時パス（コマンドライン引数/ファイル関連付け）を受け取り、指定があれば開く
+    public async Task OpenInitialAsync(string? path)
+    {
+        await EnsureWebViewAsync();
+        if (!string.IsNullOrWhiteSpace(path) && File.Exists(path))
+            await OpenFileAsync(path!);
+    }
+
     // ファイル読み込みエラーをダイアログで通知する
     private async Task ShowErrorAsync(Exception ex)
     {
@@ -97,6 +109,23 @@ public sealed partial class MainWindow : Window
 
         var file = await picker.PickSingleFileAsync();
         if (file != null) await OpenFileAsync(file.Path);
+    }
+
+    // ルートGridへのドラッグ中: コピー操作を許可する
+    private void OnDragOver(object s, DragEventArgs e)
+    {
+        e.AcceptedOperation = DataPackageOperation.Copy;
+    }
+
+    // ルートGridへのドロップ: 最初のファイルを開く
+    private async void OnDrop(object s, DragEventArgs e)
+    {
+        if (e.DataView.Contains(StandardDataFormats.StorageItems))
+        {
+            var items = await e.DataView.GetStorageItemsAsync();
+            var file = items.OfType<StorageFile>().FirstOrDefault();
+            if (file != null) await OpenFileAsync(file.Path);
+        }
     }
 
     private void OnExitClick(object s, RoutedEventArgs e) { Application.Current.Exit(); }
