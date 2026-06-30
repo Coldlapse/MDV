@@ -1,0 +1,45 @@
+# --- .NET / Visual Studio ---
+# 作成日: 2026-07-01 / 目的: .NETビルド成果物・一時ファイルをgit管理から除外
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]uild/
+[Oo]ut/
+[Pp]ublish/
+
+# Visual Studio ユーザー固有ファイル
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.vs/
+
+# MSIX / パッケージ成果物
+*.appx
+*.appxbundle
+*.appxupload
+*.msix
+*.msixbundle
+AppPackages/
+BundleArtifacts/
+*.cer
+*.pfx
+
+# NuGet
+*.nupkg
+packages/
+.nuget/
+
+# Rider / その他IDE
+.idea/
+
+# OS
+Thumbs.db
+desktop.ini
+.DS_Store
