@@ -1,4 +1,8 @@
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.Web.WebView2.Core;
+using MDV.Core.Models;
+using MDV.Core.Services;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -10,6 +14,11 @@ namespace MDV_App;
 /// </summary>
 public sealed partial class MainWindow : Window
 {
+    private string? _currentPath;
+    private ThemeMode _currentTheme = ThemeMode.System;
+    private string _template = "";
+    private bool _webReady;
+
     public MainWindow()
     {
         InitializeComponent();
@@ -20,8 +29,76 @@ public sealed partial class MainWindow : Window
         AppWindow.SetIcon("Assets/AppIcon.ico");
     }
 
-    // 各ハンドラはTask 9以降で中身を実装する。まずビルドを通す。
-    private void OnOpenClick(object s, RoutedEventArgs e) { }
+    // WebView2を初回利用時に1回だけ初期化し、vendorフォルダを仮想ホストにマッピングする
+    private async Task EnsureWebViewAsync()
+    {
+        if (_webReady) return;
+
+        EncodingDetector.RegisterProviders();
+        await ContentView.EnsureCoreWebView2Async();
+
+        var assetsDir = Path.Combine(AppContext.BaseDirectory, "Assets");
+        // http://vendor/... を Assets/vendor フォルダにマッピング
+        ContentView.CoreWebView2.SetVirtualHostNameToFolderMapping(
+            "vendor", Path.Combine(assetsDir, "vendor"),
+            CoreWebView2HostResourceAccessKind.Allow);
+
+        _template = File.ReadAllText(Path.Combine(assetsDir, "template.html"));
+        _webReady = true;
+    }
+
+    // ファイルを読み込み、MarkdownをHTMLに変換してWebView2に表示し、ステータスバーを更新する
+    public async Task OpenFileAsync(string path)
+    {
+        await EnsureWebViewAsync();
+        try
+        {
+            var doc = FileService.Load(path);
+            _currentPath = path;
+
+            var baseUri = new Uri(Path.GetDirectoryName(path)! + Path.DirectorySeparatorChar).AbsoluteUri;
+            var html = MarkdownRenderer.BuildHtml(doc.Text, _currentTheme, _template, baseUri);
+            ContentView.CoreWebView2.NavigateToString(html);
+
+            EncodingText.Text = doc.EncodingDisplay;
+            LineEndingText.Text = LineEndingDetector.ToDisplay(doc.LineEnding);
+            this.Title = $"MDV — {Path.GetFileName(path)}";
+        }
+        catch (Exception ex)
+        {
+            await ShowErrorAsync(ex);
+        }
+    }
+
+    // ファイル読み込みエラーをダイアログで通知する
+    private async Task ShowErrorAsync(Exception ex)
+    {
+        var dialog = new ContentDialog
+        {
+            Title = "ファイルを開けません",
+            Content = ex is FileNotFoundException
+                ? "指定されたファイルが見つかりませんでした。"
+                : $"ファイルの読み込み中にエラーが発生しました。\n{ex.Message}",
+            CloseButtonText = "閉じる",
+            XamlRoot = this.Content.XamlRoot
+        };
+        await dialog.ShowAsync();
+    }
+
+    // [ファイル]→[開く]: ファイルピッカーでMarkdownファイルを選択して開く
+    private async void OnOpenClick(object s, RoutedEventArgs e)
+    {
+        var picker = new Windows.Storage.Pickers.FileOpenPicker();
+        // WinUI3ではHWND初期化が必要
+        var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
+        WinRT.Interop.InitializeWithWindow.Initialize(picker, hwnd);
+        foreach (var ext in new[] { ".md", ".markdown", ".mdown", ".mkd" })
+            picker.FileTypeFilter.Add(ext);
+
+        var file = await picker.PickSingleFileAsync();
+        if (file != null) await OpenFileAsync(file.Path);
+    }
+
     private void OnExitClick(object s, RoutedEventArgs e) { Application.Current.Exit(); }
     private void OnThemeLight(object s, RoutedEventArgs e) { }
     private void OnThemeDark(object s, RoutedEventArgs e) { }
@@ -30,6 +107,12 @@ public sealed partial class MainWindow : Window
     private void OnZoomIn(object s, RoutedEventArgs e) { }
     private void OnZoomOut(object s, RoutedEventArgs e) { }
     private void OnZoomReset(object s, RoutedEventArgs e) { }
-    private void OnReload(object s, RoutedEventArgs e) { }
+
+    // [表示]→[再読み込み]: 現在開いているファイルを再読込する
+    private async void OnReload(object s, RoutedEventArgs e)
+    {
+        if (_currentPath != null) await OpenFileAsync(_currentPath);
+    }
+
     private void OnToggleStatusBar(object s, RoutedEventArgs e) { }
 }
