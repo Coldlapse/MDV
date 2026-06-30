@@ -6,9 +6,7 @@ using Microsoft.UI.Xaml;
 namespace MDV_App;
 
 /// <summary>
-/// The application window. This hosts a Frame that displays pages. Add your
-/// UI and logic to MainPage.xaml / MainPage.xaml.cs instead of here so you
-/// can use Page features such as navigation events and the Loaded lifecycle.
+/// The application window。メニューバー・WebView2本文・ステータスバーの骨組み。
 /// </summary>
 public sealed partial class MainWindow : Window
 {
@@ -20,8 +18,18 @@ public sealed partial class MainWindow : Window
         SetTitleBar(AppTitleBar);
 
         AppWindow.SetIcon("Assets/AppIcon.ico");
-
-        // Navigate the root frame to the main page on startup.
-        RootFrame.Navigate(typeof(MainPage));
     }
+
+    // 各ハンドラはTask 9以降で中身を実装する。まずビルドを通す。
+    private void OnOpenClick(object s, RoutedEventArgs e) { }
+    private void OnExitClick(object s, RoutedEventArgs e) { Application.Current.Exit(); }
+    private void OnThemeLight(object s, RoutedEventArgs e) { }
+    private void OnThemeDark(object s, RoutedEventArgs e) { }
+    private void OnThemeSystem(object s, RoutedEventArgs e) { }
+    private void OnThemeToggle(object s, RoutedEventArgs e) { }
+    private void OnZoomIn(object s, RoutedEventArgs e) { }
+    private void OnZoomOut(object s, RoutedEventArgs e) { }
+    private void OnZoomReset(object s, RoutedEventArgs e) { }
+    private void OnReload(object s, RoutedEventArgs e) { }
+    private void OnToggleStatusBar(object s, RoutedEventArgs e) { }
 }

@@ -15,7 +15,9 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <TitleBar x:Name="AppTitleBar" Title="MDV.App">
@@ -24,11 +26,44 @@
             </TitleBar.IconSource>
         </TitleBar>
 
-        <!--
-            The Frame hosts pages for your application content. Add your UI to
-            MainPage.xaml rather than here so you can use Page features such as
-            navigation events and the Loaded lifecycle.
-        -->
-        <Frame x:Name="RootFrame" Grid.Row="1" />
+        <!-- メニューバー + テーマ切替アイコン -->
+        <Grid Grid.Row="1">
+            <MenuBar>
+                <MenuBarItem Title="ファイル">
+                    <MenuFlyoutItem Text="開く" Click="OnOpenClick"/>
+                    <MenuFlyoutSeparator/>
+                    <MenuFlyoutItem Text="終了" Click="OnExitClick"/>
+                </MenuBarItem>
+                <MenuBarItem Title="表示">
+                    <MenuFlyoutSubItem Text="テーマ">
+                        <MenuFlyoutItem Text="ライト" Click="OnThemeLight"/>
+                        <MenuFlyoutItem Text="ダーク" Click="OnThemeDark"/>
+                        <MenuFlyoutItem Text="システムに合わせる" Click="OnThemeSystem"/>
+                    </MenuFlyoutSubItem>
+                    <MenuFlyoutItem Text="文字を大きく" Click="OnZoomIn"/>
+                    <MenuFlyoutItem Text="文字を小さく" Click="OnZoomOut"/>
+                    <MenuFlyoutItem Text="文字サイズをリセット" Click="OnZoomReset"/>
+                    <MenuFlyoutSeparator/>
+                    <MenuFlyoutItem Text="再読み込み" Click="OnReload"/>
+                    <MenuFlyoutItem Text="ステータスバー表示切替" Click="OnToggleStatusBar"/>
+                </MenuBarItem>
+            </MenuBar>
+            <Button x:Name="ThemeToggle" Click="OnThemeToggle"
+                    HorizontalAlignment="Right" Background="Transparent" BorderThickness="0"
+                    Content="🌙" FontSize="16" Margin="0,0,8,0"/>
+        </Grid>
+
+        <!-- 本文 -->
+        <WebView2 x:Name="ContentView" Grid.Row="2"/>
+
+        <!-- ステータスバー -->
+        <Grid x:Name="StatusBar" Grid.Row="3" Padding="8,2" Background="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock x:Name="EncodingText" Grid.Column="0" Text=""/>
+            <TextBlock x:Name="LineEndingText" Grid.Column="1" Text=""/>
+        </Grid>
     </Grid>
 </Window>
