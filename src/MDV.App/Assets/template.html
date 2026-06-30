@@ -53,6 +53,12 @@
       document.documentElement.className = cls;
       applyTheme();
     };
+    // ホスト(C#)から文字サイズ(ズーム)変更を受けるためのフック
+    // WinUI3のWebView2コントロールはCoreWebView2Controller.ZoomFactorを公開していないため、
+    // CSSのzoomプロパティで代替する（ナビゲーションのたびに再適用が必要）
+    window.__setZoom = function (factor) {
+      document.body.style.zoom = factor;
+    };
   </script>
 </body>
 </html>

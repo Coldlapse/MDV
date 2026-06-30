@@ -23,6 +23,10 @@ public sealed partial class MainWindow : Window
     private ThemeMode _currentTheme = ThemeMode.System;
     private string _template = "";
     private bool _webReady;
+    private AppSettings _settings = new();
+    // WinUI3のWebView2 XAMLコントロールはCoreWebView2Controller/ZoomFactorを公開していないため、
+    // CSS(zoom)経由でWebView2側に倍率を適用し、現在値はこのフィールドで保持する
+    private double _zoomFactor = 1.0;
 
     public MainWindow()
     {
@@ -32,6 +36,8 @@ public sealed partial class MainWindow : Window
         SetTitleBar(AppTitleBar);
 
         AppWindow.SetIcon("Assets/AppIcon.ico");
+
+        this.Closed += (s, e) => PersistSettings();
     }
 
     // WebView2を初回利用時に1回だけ初期化し、vendorフォルダを仮想ホストにマッピングする
@@ -50,6 +56,37 @@ public sealed partial class MainWindow : Window
 
         _template = File.ReadAllText(Path.Combine(assetsDir, "template.html"));
         _webReady = true;
+
+        LoadSettings();
+    }
+
+    // 文字サイズ(ズーム)をWebView2へ適用する
+    // WinUI3のWebView2 XAMLコントロールはCoreWebView2Controller(ZoomFactor)を公開していないため、
+    // CSS(zoom)をJS経由で適用する（template.html側のwindow.__setZoomフック）
+    private async void ApplyZoom(double factor)
+    {
+        _zoomFactor = factor;
+        if (_webReady)
+            await ContentView.CoreWebView2.ExecuteScriptAsync(
+                $"window.__setZoom && window.__setZoom('{_zoomFactor.ToString(System.Globalization.CultureInfo.InvariantCulture)}')");
+    }
+
+    // 保存済み設定を読み込み、各UIへ適用する（読み込み時は永続化しない）
+    private void LoadSettings()
+    {
+        try { _settings = SettingsService.Load(); } catch { _settings = new AppSettings(); }
+        ApplyZoom(_settings.ZoomFactor);
+        StatusBar.Visibility = _settings.ShowStatusBar ? Visibility.Visible : Visibility.Collapsed;
+        SetTheme(_settings.Theme);   // テーマを適用する（永続化はしない）
+    }
+
+    // 現在のテーマ・文字サイズ・ステータスバー表示状態を設定として保存する
+    private void PersistSettings()
+    {
+        _settings.Theme = _currentTheme;
+        _settings.ZoomFactor = _zoomFactor;
+        _settings.ShowStatusBar = StatusBar.Visibility == Visibility.Visible;
+        try { SettingsService.Save(_settings); } catch { /* 保存失敗は無視 */ }
     }
 
     // ファイルを読み込み、MarkdownをHTMLに変換してWebView2に表示し、ステータスバーを更新する
@@ -64,6 +101,8 @@ public sealed partial class MainWindow : Window
             var baseUri = new Uri(Path.GetDirectoryName(path)! + Path.DirectorySeparatorChar).AbsoluteUri;
             var html = MarkdownRenderer.BuildHtml(doc.Text, _currentTheme, _template, baseUri);
             ContentView.CoreWebView2.NavigateToString(html);
+            // ナビゲーションでCSS状態がリセットされるため、文字サイズを再適用する
+            ApplyZoom(_zoomFactor);
 
             EncodingText.Text = doc.EncodingDisplay;
             LineEndingText.Text = LineEndingDetector.ToDisplay(doc.LineEnding);
@@ -129,7 +168,7 @@ public sealed partial class MainWindow : Window
         }
     }
 
-    private void OnExitClick(object s, RoutedEventArgs e) { Application.Current.Exit(); }
+    private void OnExitClick(object s, RoutedEventArgs e) { PersistSettings(); Application.Current.Exit(); }
 
     // テーマを切り替え、ウィンドウ・トグルアイコン・WebView2本文へ反映する
     private async void SetTheme(ThemeMode mode)
@@ -143,14 +182,41 @@ public sealed partial class MainWindow : Window
                 $"window.__setTheme && window.__setTheme('{ThemeService.ToCssClass(mode)}')");
     }
 
-    private void OnThemeLight(object s, RoutedEventArgs e) => SetTheme(ThemeMode.Light);
-    private void OnThemeDark(object s, RoutedEventArgs e) => SetTheme(ThemeMode.Dark);
-    private void OnThemeSystem(object s, RoutedEventArgs e) => SetTheme(ThemeMode.System);
-    private void OnThemeToggle(object s, RoutedEventArgs e) =>
+    private void OnThemeLight(object s, RoutedEventArgs e) { SetTheme(ThemeMode.Light); PersistSettings(); }
+    private void OnThemeDark(object s, RoutedEventArgs e) { SetTheme(ThemeMode.Dark); PersistSettings(); }
+    private void OnThemeSystem(object s, RoutedEventArgs e) { SetTheme(ThemeMode.System); PersistSettings(); }
+    private void OnThemeToggle(object s, RoutedEventArgs e)
+    {
         SetTheme(_currentTheme == ThemeMode.Dark ? ThemeMode.Light : ThemeMode.Dark);
-    private void OnZoomIn(object s, RoutedEventArgs e) { }
-    private void OnZoomOut(object s, RoutedEventArgs e) { }
-    private void OnZoomReset(object s, RoutedEventArgs e) { }
+        PersistSettings();
+    }
+
+    private void OnZoomIn(object s, RoutedEventArgs e)
+    {
+        if (_webReady)
+        {
+            ApplyZoom(Math.Min(3.0, _zoomFactor + 0.1));
+            PersistSettings();
+        }
+    }
+
+    private void OnZoomOut(object s, RoutedEventArgs e)
+    {
+        if (_webReady)
+        {
+            ApplyZoom(Math.Max(0.5, _zoomFactor - 0.1));
+            PersistSettings();
+        }
+    }
+
+    private void OnZoomReset(object s, RoutedEventArgs e)
+    {
+        if (_webReady)
+        {
+            ApplyZoom(1.0);
+            PersistSettings();
+        }
+    }
 
     // [表示]→[再読み込み]: 現在開いているファイルを再読込する
     private async void OnReload(object s, RoutedEventArgs e)
@@ -158,5 +224,9 @@ public sealed partial class MainWindow : Window
         if (_currentPath != null) await OpenFileAsync(_currentPath);
     }
 
-    private void OnToggleStatusBar(object s, RoutedEventArgs e) { }
+    private void OnToggleStatusBar(object s, RoutedEventArgs e)
+    {
+        StatusBar.Visibility = StatusBar.Visibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
+        PersistSettings();
+    }
 }
