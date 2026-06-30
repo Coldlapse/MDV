@@ -3,6 +3,7 @@ using System.Linq;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Web.WebView2.Core;
+using MDV.App.Services;
 using MDV.Core.Models;
 using MDV.Core.Services;
 using Windows.ApplicationModel.DataTransfer;
@@ -129,10 +130,24 @@ public sealed partial class MainWindow : Window
     }
 
     private void OnExitClick(object s, RoutedEventArgs e) { Application.Current.Exit(); }
-    private void OnThemeLight(object s, RoutedEventArgs e) { }
-    private void OnThemeDark(object s, RoutedEventArgs e) { }
-    private void OnThemeSystem(object s, RoutedEventArgs e) { }
-    private void OnThemeToggle(object s, RoutedEventArgs e) { }
+
+    // テーマを切り替え、ウィンドウ・トグルアイコン・WebView2本文へ反映する
+    private async void SetTheme(ThemeMode mode)
+    {
+        _currentTheme = mode;
+        ThemeService.ApplyToWindow(this, mode);
+        ThemeToggle.Content = ThemeService.ToggleIcon(mode);
+        // WebView2側のCSSも切替
+        if (_webReady)
+            await ContentView.CoreWebView2.ExecuteScriptAsync(
+                $"window.__setTheme && window.__setTheme('{ThemeService.ToCssClass(mode)}')");
+    }
+
+    private void OnThemeLight(object s, RoutedEventArgs e) => SetTheme(ThemeMode.Light);
+    private void OnThemeDark(object s, RoutedEventArgs e) => SetTheme(ThemeMode.Dark);
+    private void OnThemeSystem(object s, RoutedEventArgs e) => SetTheme(ThemeMode.System);
+    private void OnThemeToggle(object s, RoutedEventArgs e) =>
+        SetTheme(_currentTheme == ThemeMode.Dark ? ThemeMode.Light : ThemeMode.Dark);
     private void OnZoomIn(object s, RoutedEventArgs e) { }
     private void OnZoomOut(object s, RoutedEventArgs e) { }
     private void OnZoomReset(object s, RoutedEventArgs e) { }
