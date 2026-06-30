@@ -55,9 +55,34 @@ public sealed partial class MainWindow : Window
             CoreWebView2HostResourceAccessKind.Allow);
 
         _template = File.ReadAllText(Path.Combine(assetsDir, "template.html"));
+
+        // 外部リンク(http/https)はアプリ内WebView2で遷移させず、既定ブラウザで開く
+        ContentView.CoreWebView2.NewWindowRequested += (s, e) =>
+        {
+            e.Handled = true;
+            LaunchExternal(e.Uri);
+        };
+        ContentView.CoreWebView2.NavigationStarting += (s, e) =>
+        {
+            if (Uri.TryCreate(e.Uri, UriKind.Absolute, out var uri) &&
+                (uri.Scheme == "http" || uri.Scheme == "https") &&
+                uri.Host != "vendor")            // 同梱資産(http://vendor/...)の取得は遮らない
+            {
+                e.Cancel = true;
+                LaunchExternal(e.Uri);
+            }
+        };
+
         _webReady = true;
 
         LoadSettings();
+    }
+
+    // 外部URIを既定のブラウザ（既定アプリ）で開く
+    private static async void LaunchExternal(string uri)
+    {
+        if (Uri.TryCreate(uri, UriKind.Absolute, out var u))
+            await Windows.System.Launcher.LaunchUriAsync(u);
     }
 
     // 文字サイズ(ズーム)をWebView2へ適用する
