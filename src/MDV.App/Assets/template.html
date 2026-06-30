@@ -12,9 +12,6 @@
   <style>
     body { margin: 0; }
     .markdown-body { box-sizing: border-box; max-width: 900px; margin: 0 auto; padding: 24px; }
-    /* テーマ別の表示制御 */
-    html.theme-light #md-dark, html.theme-light #hl-dark { disabled: true; }
-    html.theme-dark  #md-light,html.theme-dark  #hl-light { disabled: true; }
   </style>
 </head>
 <body>
@@ -45,7 +42,11 @@
       ]
     });
     // Mermaid図
-    mermaid.initialize({ startOnLoad: false, theme: 'default' });
+    // ダークモード時はMermaidもダークテーマで描画
+    var __mermaidDark = document.documentElement.classList.contains('theme-dark') ||
+      (document.documentElement.classList.contains('theme-system') &&
+       window.matchMedia('(prefers-color-scheme: dark)').matches);
+    mermaid.initialize({ startOnLoad: false, theme: __mermaidDark ? 'dark' : 'default' });
     mermaid.run({ querySelector: '.mermaid' });
     // ホスト(C#)からテーマ変更を受けるためのフック
     window.__setTheme = function (cls) {
