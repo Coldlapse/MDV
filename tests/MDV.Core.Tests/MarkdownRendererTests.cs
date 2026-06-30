@@ -22,18 +22,32 @@ public class MarkdownRendererTests
         Assert.Contains("language-csharp", html);
     }
 
-    [Fact] public void Mermaid_block_becomes_div()
+    [Fact] public void Mermaid_block_has_mermaid_class()
     {
+        // Markdig 1.3.2 (UseAdvancedExtensions の Diagrams拡張) は
+        // ```mermaid フェンスを <pre class="mermaid">...</pre> として出力する
+        // （<pre><code class="language-mermaid"> ではない）。
         var html = MarkdownRenderer.RenderBody("```mermaid\ngraph TD; A-->B;\n```");
         Assert.Contains("class=\"mermaid\"", html);
+        Assert.Contains("graph TD; A-->B;", html);
         Assert.DoesNotContain("language-mermaid", html);
     }
 
     [Fact] public void Math_dollar_is_preserved_for_katex()
     {
-        // KaTeXはクライアント側でレンダリングするため、$...$ がHTMLに残ればよい
+        // KaTeXはクライアント側でレンダリングするため、数式の中身がHTMLに残ればよい
         var html = MarkdownRenderer.RenderBody("$E=mc^2$");
         Assert.Contains("E=mc^2", html);
+    }
+
+    [Fact] public void Math_renders_as_katex_span_with_backslash_paren_delimiter()
+    {
+        // Markdig 1.3.2 (UseMathematics) は $...$ を解釈し、$ をHTMLに残さず
+        // <span class="math">\(...\)</span> 形式で出力する。
+        // テンプレート側KaTeXの delimiters は \( \) を含む必要があり、この契約を固定する。
+        var html = MarkdownRenderer.RenderBody("$E=mc^2$");
+        Assert.Contains("class=\"math\"", html);
+        Assert.Contains("\\(E=mc^2\\)", html);
     }
 
     [Fact] public void BuildHtml_substitutes_placeholders()

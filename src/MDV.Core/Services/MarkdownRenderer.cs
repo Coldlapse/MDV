@@ -1,4 +1,3 @@
-using System.Text.RegularExpressions;
 using Markdig;
 using MDV.Core.Models;
 
@@ -13,19 +12,12 @@ public static class MarkdownRenderer
         .UseMathematics()          // $...$ / $$...$$ を保持
         .Build();
 
+    // Markdig(UseAdvancedExtensions)のDiagrams拡張により、```mermaid フェンスは
+    // 既に <pre class="mermaid">...</pre> として出力されるため、変換処理は不要
+    // （テンプレート側 mermaid.run({querySelector:'.mermaid'}) がそのまま拾える）。
     public static string RenderBody(string markdown)
     {
-        var html = Markdown.ToHtml(markdown ?? string.Empty, Pipeline);
-        return ConvertMermaid(html);
-    }
-
-    // <pre><code class="language-mermaid">...</code></pre> を <div class="mermaid">...</div> に変換
-    private static string ConvertMermaid(string html)
-    {
-        var pattern = "<pre><code class=\"language-mermaid\">(?<body>.*?)</code></pre>";
-        return Regex.Replace(html, pattern,
-            m => "<div class=\"mermaid\">" + System.Net.WebUtility.HtmlDecode(m.Groups["body"].Value) + "</div>",
-            RegexOptions.Singleline);
+        return Markdown.ToHtml(markdown ?? string.Empty, Pipeline);
     }
 
     public static string BuildHtml(string markdown, ThemeMode theme, string template, string baseDirUri)

@@ -35,10 +35,15 @@
     // コード色付け
     document.querySelectorAll('pre code').forEach(function (el) { hljs.highlightElement(el); });
     // 数式
+    // Markdig(UseMathematics)は $...$ / $$...$$ を解釈し、HTML上は \(...\) / \[...\] 形式の
+    // <span class="math">/<div class="math"> として出力する（$ はHTMLに残らない）。
+    // そのためKaTeXの自動描画にも \( \) / \[ \] の区切りを登録する必要がある。
     renderMathInElement(document.body, {
       delimiters: [
         { left: '$$', right: '$$', display: true },
-        { left: '$',  right: '$',  display: false }
+        { left: '$',  right: '$',  display: false },
+        { left: '\\(', right: '\\)', display: false },
+        { left: '\\[', right: '\\]', display: true }
       ]
     });
     // Mermaid図

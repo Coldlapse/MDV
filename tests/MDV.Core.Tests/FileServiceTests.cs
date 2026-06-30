@@ -42,4 +42,19 @@ public class FileServiceTests
     {
         Assert.Throws<FileNotFoundException>(() => FileService.Load(@"C:\no\such\file.md"));
     }
+
+    [Fact]
+    public void Loads_utf8_bom_file_and_strips_bom()
+    {
+        var path = Path.GetTempFileName();
+        File.WriteAllText(path, "# 見出し\r\n本文\r\n", new UTF8Encoding(true));
+        try
+        {
+            var r = FileService.Load(path);
+            Assert.Equal("UTF-8 (BOM)", r.EncodingDisplay);
+            Assert.False(r.Text.StartsWith('﻿'));
+            Assert.Contains("見出し", r.Text);
+        }
+        finally { File.Delete(path); }
+    }
 }
