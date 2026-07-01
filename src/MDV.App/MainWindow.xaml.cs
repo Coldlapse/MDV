@@ -46,7 +46,10 @@ public sealed partial class MainWindow : Window
         if (_webReady) return;
 
         EncodingDetector.RegisterProviders();
-        await ContentView.EnsureCoreWebView2Async();
+        // WebView2の既定UI(右クリックメニュー等)を日本語にするため、言語を指定した環境で初期化する
+        var env = await CoreWebView2Environment.CreateWithOptionsAsync(null, null,
+            new CoreWebView2EnvironmentOptions { Language = "ja-JP" });
+        await ContentView.EnsureCoreWebView2Async(env);
 
         var assetsDir = Path.Combine(AppContext.BaseDirectory, "Assets");
         // http://vendor/... を Assets/vendor フォルダにマッピング
@@ -73,6 +76,14 @@ public sealed partial class MainWindow : Window
             }
         };
 
+        // 右クリックの既定メニューを閲覧向けに整理する（保存/検証などを除去し、コピー・印刷・再読み込みを残す）
+        ContentView.CoreWebView2.ContextMenuRequested += OnContextMenuRequested;
+
+        // ブラウザ既定のショートカット(Ctrl+P/F5/Ctrl+F/Ctrl+±等)を無効化し、アプリのメニュー動作に一本化する
+        ContentView.CoreWebView2.Settings.AreBrowserAcceleratorKeysEnabled = false;
+        // WebView2内でのショートカット押下(template.htmlのkeydown→postMessage)をホストで受ける
+        ContentView.CoreWebView2.WebMessageReceived += OnWebMessageReceived;
+
         _webReady = true;
 
         LoadSettings();
@@ -83,6 +94,76 @@ public sealed partial class MainWindow : Window
     {
         if (Uri.TryCreate(uri, UriKind.Absolute, out var u))
             await Windows.System.Launcher.LaunchUriAsync(u);
+    }
+
+    // WebView2の右クリックメニューを閲覧向けに整理する
+    private void OnContextMenuRequested(CoreWebView2 sender, CoreWebView2ContextMenuRequestedEventArgs e)
+    {
+        // 閲覧に必要な既定項目のみ残す（コピー・切り取り・貼り付け・全選択・印刷）。
+        // 名前(Name)は言語非依存の識別子のため、日本語表示でもこの判定は有効。
+        var keep = new System.Collections.Generic.HashSet<string>
+        {
+            "copy", "cut", "paste", "pasteAndMatchStyle", "selectAll", "print"
+        };
+        for (int i = e.MenuItems.Count - 1; i >= 0; i--)
+        {
+            var item = e.MenuItems[i];
+            if (item.Kind == CoreWebView2ContextMenuItemKind.Separator || !keep.Contains(item.Name))
+                e.MenuItems.RemoveAt(i);
+        }
+
+        // 「再読み込み」はカスタム項目として追加し、ファイルを再読込する。
+        // ※WebView2既定のReloadはNavigateToStringページを空白化してしまうため使わない。
+        if (_currentPath != null)
+        {
+            if (e.MenuItems.Count > 0)
+                e.MenuItems.Add(sender.Environment.CreateContextMenuItem(
+                    "", null, CoreWebView2ContextMenuItemKind.Separator));
+
+            var reload = sender.Environment.CreateContextMenuItem(
+                "再読み込み", null, CoreWebView2ContextMenuItemKind.Command);
+            reload.CustomItemSelected += (s2, a2) =>
+                DispatcherQueue.TryEnqueue(async () =>
+                {
+                    if (_currentPath != null) await OpenFileAsync(_currentPath);
+                });
+            e.MenuItems.Add(reload);
+        }
+    }
+
+    // WebView2内で押されたショートカット(template.htmlから通知)を対応するメニュー動作へ振り分ける
+    private void OnWebMessageReceived(CoreWebView2 sender, CoreWebView2WebMessageReceivedEventArgs e)
+    {
+        string msg;
+        try { msg = e.TryGetWebMessageAsString(); }
+        catch { return; }
+        // コードブロックの「コピー」ボタン: 受け取った本文をクリップボードへ設定する
+        if (msg != null && msg.StartsWith("copy:"))
+        {
+            var pkg = new DataPackage();
+            pkg.SetText(msg.Substring(5));
+            Clipboard.SetContent(pkg);
+            return;
+        }
+        switch (msg)
+        {
+            case "open": OnOpenClick(this, null!); break;
+            case "print": OnPrint(this, null!); break;
+            case "zoomIn": OnZoomIn(this, null!); break;
+            case "zoomOut": OnZoomOut(this, null!); break;
+            case "zoomReset": OnZoomReset(this, null!); break;
+            case "reload": OnReload(this, null!); break;
+            case "about": OnAboutClick(this, null!); break;
+        }
+    }
+
+    // [ファイル]→[印刷]: 印刷プレビュー(ダイアログ)を表示する。
+    // WinUIのWebView2射影は ShowPrintUI を公開していないため、JSの window.print() を用いる。
+    private async void OnPrint(object s, RoutedEventArgs e)
+    {
+        if (_webReady)
+            try { await ContentView.CoreWebView2.ExecuteScriptAsync("window.print()"); }
+            catch { /* 印刷UIの表示失敗は無視 */ }
     }
 
     // 文字サイズ(ズーム)をWebView2へ適用する
@@ -238,13 +319,12 @@ public sealed partial class MainWindow : Window
             TextWrapping = TextWrapping.Wrap
         });
 
-        // GitHubリンク（クリックで既定ブラウザが開く。オフラインでも下のライセンス本文は読める）
-        panel.Children.Add(new HyperlinkButton
-        {
-            Content = "GitHub リポジトリを開く",
-            NavigateUri = new Uri("https://github.com/kajiyajp/MDV"),
-            Padding = new Thickness(0)
-        });
+        // GitHubリンク（クリックで既定ブラウザが開く。オフラインでも下のライセンス本文は読める）。
+        // 注: WinUI3デスクトップでは HyperlinkButton.NavigateUri が自動でブラウザを開かないため、
+        //     アプリ本体と同じ Launcher.LaunchUriAsync 経由(LaunchExternal)で明示的に開く。
+        var githubLink = new HyperlinkButton { Content = "GitHub リポジトリを開く", Padding = new Thickness(0) };
+        githubLink.Click += (s, e) => LaunchExternal("https://github.com/kajiyajp/MDV");
+        panel.Children.Add(githubLink);
 
         panel.Children.Add(new TextBlock
         {
