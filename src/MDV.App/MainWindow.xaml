@@ -30,9 +30,22 @@
         <Grid Grid.Row="1">
             <MenuBar>
                 <MenuBarItem Title="ファイル">
-                    <MenuFlyoutItem Text="開く" Click="OnOpenClick"/>
+                    <MenuFlyoutItem Text="開く" Click="OnOpenClick">
+                        <MenuFlyoutItem.KeyboardAccelerators>
+                            <KeyboardAccelerator Key="O" Modifiers="Control"/>
+                        </MenuFlyoutItem.KeyboardAccelerators>
+                    </MenuFlyoutItem>
+                    <MenuFlyoutItem Text="印刷" Click="OnPrint">
+                        <MenuFlyoutItem.KeyboardAccelerators>
+                            <KeyboardAccelerator Key="P" Modifiers="Control"/>
+                        </MenuFlyoutItem.KeyboardAccelerators>
+                    </MenuFlyoutItem>
                     <MenuFlyoutSeparator/>
-                    <MenuFlyoutItem Text="終了" Click="OnExitClick"/>
+                    <MenuFlyoutItem Text="終了" Click="OnExitClick">
+                        <MenuFlyoutItem.KeyboardAccelerators>
+                            <KeyboardAccelerator Key="F4" Modifiers="Menu"/>
+                        </MenuFlyoutItem.KeyboardAccelerators>
+                    </MenuFlyoutItem>
                 </MenuBarItem>
                 <MenuBarItem Title="表示">
                     <MenuFlyoutSubItem Text="テーマ">
@@ -40,12 +53,27 @@
                         <MenuFlyoutItem Text="ダーク" Click="OnThemeDark"/>
                         <MenuFlyoutItem Text="システムに合わせる" Click="OnThemeSystem"/>
                     </MenuFlyoutSubItem>
-                    <MenuFlyoutItem Text="文字を大きく" Click="OnZoomIn"/>
-                    <MenuFlyoutItem Text="文字を小さく" Click="OnZoomOut"/>
-                    <MenuFlyoutItem Text="文字サイズをリセット" Click="OnZoomReset"/>
+                    <MenuFlyoutItem Text="文字を大きく" Click="OnZoomIn" KeyboardAcceleratorTextOverride="Ctrl +"/>
+                    <MenuFlyoutItem Text="文字を小さく" Click="OnZoomOut" KeyboardAcceleratorTextOverride="Ctrl -"/>
+                    <MenuFlyoutItem Text="文字サイズをリセット" Click="OnZoomReset">
+                        <MenuFlyoutItem.KeyboardAccelerators>
+                            <KeyboardAccelerator Key="Number0" Modifiers="Control"/>
+                        </MenuFlyoutItem.KeyboardAccelerators>
+                    </MenuFlyoutItem>
                     <MenuFlyoutSeparator/>
-                    <MenuFlyoutItem Text="再読み込み" Click="OnReload"/>
+                    <MenuFlyoutItem Text="再読み込み" Click="OnReload">
+                        <MenuFlyoutItem.KeyboardAccelerators>
+                            <KeyboardAccelerator Key="F5"/>
+                        </MenuFlyoutItem.KeyboardAccelerators>
+                    </MenuFlyoutItem>
                     <MenuFlyoutItem Text="ステータスバー表示切替" Click="OnToggleStatusBar"/>
+                </MenuBarItem>
+                <MenuBarItem Title="ヘルプ">
+                    <MenuFlyoutItem Text="このアプリについて" Click="OnAboutClick">
+                        <MenuFlyoutItem.KeyboardAccelerators>
+                            <KeyboardAccelerator Key="F1"/>
+                        </MenuFlyoutItem.KeyboardAccelerators>
+                    </MenuFlyoutItem>
                 </MenuBarItem>
             </MenuBar>
             <Button x:Name="ThemeToggle" Click="OnThemeToggle"

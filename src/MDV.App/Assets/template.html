@@ -12,6 +12,18 @@
   <style>
     body { margin: 0; }
     .markdown-body { box-sizing: border-box; max-width: 900px; margin: 0 auto; padding: 24px; }
+    /* コードブロック右上の「コピー」ボタン（ホバーで表示） */
+    .markdown-body pre { position: relative; }
+    .md-copy-btn {
+      position: absolute; top: 6px; right: 6px;
+      padding: 3px 8px; font-size: 12px; line-height: 1.4;
+      font-family: system-ui, "Segoe UI", sans-serif;
+      border: 1px solid rgba(128,128,128,.4); border-radius: 6px;
+      background: rgba(128,128,128,.15); color: inherit; cursor: pointer;
+      opacity: 0; transition: opacity .15s;
+    }
+    .markdown-body pre:hover .md-copy-btn { opacity: 1; }
+    .md-copy-btn:hover { background: rgba(128,128,128,.3); }
   </style>
 </head>
 <body>
@@ -64,6 +76,42 @@
     window.__setZoom = function (factor) {
       document.body.style.zoom = factor;
     };
+    // WebView2にフォーカスがある間もアプリのメニューショートカットを効かせるため、
+    // 該当キーを捕捉してホスト(C#)へ通知する（ホスト側で対応するメニュー動作を実行）。
+    document.addEventListener('keydown', function (ev) {
+      var ctrl = ev.ctrlKey && !ev.altKey && !ev.metaKey;
+      var msg = null;
+      if (ctrl && (ev.key === 'o' || ev.key === 'O')) msg = 'open';
+      else if (ctrl && (ev.key === 'p' || ev.key === 'P')) msg = 'print';
+      else if (ctrl && (ev.key === '+' || ev.key === '=')) msg = 'zoomIn';
+      else if (ctrl && (ev.key === '-' || ev.key === '_')) msg = 'zoomOut';
+      else if (ctrl && ev.key === '0') msg = 'zoomReset';
+      else if (ev.key === 'F5') msg = 'reload';
+      else if (ev.key === 'F1') msg = 'about';
+      if (msg && window.chrome && window.chrome.webview) {
+        ev.preventDefault();
+        window.chrome.webview.postMessage(msg);
+      }
+    });
+    // コードブロック右上に「コピー」ボタンを追加する（Mermaid図は除外）。
+    // クリップボードは確実性のためホスト(C#)経由でコピーする（postMessage 'copy:'）。
+    document.querySelectorAll('.markdown-body pre').forEach(function (pre) {
+      if (pre.classList.contains('mermaid')) return;
+      var code = pre.querySelector('code');
+      if (!code) return;
+      var btn = document.createElement('button');
+      btn.className = 'md-copy-btn';
+      btn.type = 'button';
+      btn.textContent = 'コピー';
+      btn.addEventListener('click', function () {
+        if (window.chrome && window.chrome.webview) {
+          window.chrome.webview.postMessage('copy:' + code.innerText);
+          btn.textContent = 'コピーしました';
+          setTimeout(function () { btn.textContent = 'コピー'; }, 1200);
+        }
+      });
+      pre.appendChild(btn);
+    });
   </script>
 </body>
 </html>

@@ -37,6 +37,18 @@
   </ItemGroup>
 
   <!--
+    リポジトリ直下の THIRD-PARTY-NOTICES.md を Assets として出力へコピーする。
+    Link で Assets\ 配下に配置することで、単一の情報源を保ちつつ
+    実行時に AppContext.BaseDirectory\Assets\THIRD-PARTY-NOTICES.md から読み込める。
+    「このアプリについて」ダイアログがオフラインでこの本文を表示するために必須。
+  -->
+  <ItemGroup>
+    <Content Include="..\..\THIRD-PARTY-NOTICES.md" Link="Assets\THIRD-PARTY-NOTICES.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <!--
     Defining the "Msix" ProjectCapability here allows the Single-project MSIX Packaging
     Tools extension to be activated for this project even if the Windows App SDK Nuget
     package has not yet been restored.
