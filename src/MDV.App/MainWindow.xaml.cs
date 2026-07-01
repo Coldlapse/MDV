@@ -217,7 +217,7 @@ public sealed partial class MainWindow : Window
             notices = "サードパーティ ライセンス情報を読み込めませんでした。";
         }
 
-        var panel = new StackPanel { Spacing = 6, MaxWidth = 540 };
+        var panel = new StackPanel { Spacing = 6 };
 
         panel.Children.Add(new TextBlock
         {
@@ -254,7 +254,8 @@ public sealed partial class MainWindow : Window
             Margin = new Thickness(0, 6, 0, 0)
         });
 
-        // 通知本文は等幅フォントで表示し、テーブルの整列を保つため折り返さず縦横スクロール可能にする
+        // 通知本文は等幅フォントで表示。テーブルの整列を保つため折り返さず「横スクロールのみ」。
+        // 縦スクロールは外側のScrollViewerに委ねる（内側の縦スクロールを無効化しネスト縦スクロールを回避）。
         var noticesText = new TextBlock
         {
             Text = notices,
@@ -268,8 +269,8 @@ public sealed partial class MainWindow : Window
             Content = noticesText,
             HorizontalScrollBarVisibility = ScrollBarVisibility.Auto,
             HorizontalScrollMode = ScrollMode.Auto,
-            VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
-            MaxHeight = 280
+            VerticalScrollBarVisibility = ScrollBarVisibility.Disabled,
+            VerticalScrollMode = ScrollMode.Disabled
         };
         // 枠線はテーマリソースを用い、両テーマで視認できるようにする（未定義時は灰色にフォールバック）
         Microsoft.UI.Xaml.Media.Brush strokeBrush =
@@ -285,7 +286,16 @@ public sealed partial class MainWindow : Window
             Padding = new Thickness(8)
         });
 
-        return panel;
+        // ダイアログ全体を縦スクロール可能にし、画面が小さくても内容が溢れず
+        // 「閉じる」ボタンが隠れないようにする（高さ・幅を上限で制約）。
+        return new ScrollViewer
+        {
+            Content = panel,
+            VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+            HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
+            MaxHeight = 460,
+            MaxWidth = 560
+        };
     }
 
     // [ファイル]→[開く]: ファイルピッカーでMarkdownファイルを選択して開く
