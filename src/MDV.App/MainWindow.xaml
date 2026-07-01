@@ -47,6 +47,9 @@
                     <MenuFlyoutItem Text="再読み込み" Click="OnReload"/>
                     <MenuFlyoutItem Text="ステータスバー表示切替" Click="OnToggleStatusBar"/>
                 </MenuBarItem>
+                <MenuBarItem Title="ヘルプ">
+                    <MenuFlyoutItem Text="このアプリについて" Click="OnAboutClick"/>
+                </MenuBarItem>
             </MenuBar>
             <Button x:Name="ThemeToggle" Click="OnThemeToggle"
                     HorizontalAlignment="Right" Background="Transparent" BorderThickness="0"

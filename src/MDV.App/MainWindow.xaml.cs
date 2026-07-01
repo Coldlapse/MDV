@@ -172,6 +172,122 @@ public sealed partial class MainWindow : Window
         await dialog.ShowAsync();
     }
 
+    // [ヘルプ]→[このアプリについて]: アプリ情報とサードパーティライセンスをダイアログ表示する
+    private async void OnAboutClick(object s, RoutedEventArgs e)
+    {
+        var dialog = new ContentDialog
+        {
+            Title = "このアプリについて",
+            Content = BuildAboutContent(),
+            CloseButtonText = "閉じる",
+            XamlRoot = this.Content.XamlRoot,
+            // ダイアログをウィンドウの現在テーマに合わせる（ライト/ダーク両対応）
+            RequestedTheme = (this.Content as FrameworkElement)?.RequestedTheme ?? ElementTheme.Default
+        };
+        await dialog.ShowAsync();
+    }
+
+    // Aboutダイアログの中身を組み立てる（アプリ名・版・著作権・MIT・サードパーティ一覧）
+    private static FrameworkElement BuildAboutContent()
+    {
+        // アプリ名・バージョンをパッケージ情報から動的取得（非パッケージ実行時はアセンブリ情報へフォールバック）
+        string appName = "MDV";
+        string version = "1.0.0.0";
+        try
+        {
+            var pkg = Windows.ApplicationModel.Package.Current;
+            appName = string.IsNullOrWhiteSpace(pkg.DisplayName) ? "MDV" : pkg.DisplayName;
+            var v = pkg.Id.Version;
+            version = $"{v.Major}.{v.Minor}.{v.Build}.{v.Revision}";
+        }
+        catch
+        {
+            var asmVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+            if (asmVersion != null) version = asmVersion.ToString();
+        }
+
+        // サードパーティ表記を Assets から読み込む（ビルド時にコピー済み。無ければメッセージを出す）
+        string notices;
+        try
+        {
+            notices = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "Assets", "THIRD-PARTY-NOTICES.md"));
+        }
+        catch
+        {
+            notices = "サードパーティ ライセンス情報を読み込めませんでした。";
+        }
+
+        var panel = new StackPanel { Spacing = 6, MaxWidth = 540 };
+
+        panel.Children.Add(new TextBlock
+        {
+            Text = $"{appName}  バージョン {version}",
+            FontWeight = Microsoft.UI.Text.FontWeights.SemiBold,
+            FontSize = 18
+        });
+        panel.Children.Add(new TextBlock
+        {
+            Text = "Windows 11 ネイティブの閲覧専用 Markdown ビューア",
+            TextWrapping = TextWrapping.Wrap,
+            Opacity = 0.8
+        });
+        panel.Children.Add(new TextBlock { Text = "Copyright (c) 2026 kajiyajp", TextWrapping = TextWrapping.Wrap });
+        panel.Children.Add(new TextBlock
+        {
+            Text = "本ソフトウェアは MIT License の下で公開されています。",
+            TextWrapping = TextWrapping.Wrap
+        });
+
+        // GitHubリンク（クリックで既定ブラウザが開く。オフラインでも下のライセンス本文は読める）
+        panel.Children.Add(new HyperlinkButton
+        {
+            Content = "GitHub リポジトリを開く",
+            NavigateUri = new Uri("https://github.com/kajiyajp/MDV"),
+            Padding = new Thickness(0)
+        });
+
+        panel.Children.Add(new TextBlock
+        {
+            Text = "サードパーティ ライセンス",
+            FontWeight = Microsoft.UI.Text.FontWeights.SemiBold,
+            FontSize = 15,
+            Margin = new Thickness(0, 6, 0, 0)
+        });
+
+        // 通知本文は等幅フォントで表示し、テーブルの整列を保つため折り返さず縦横スクロール可能にする
+        var noticesText = new TextBlock
+        {
+            Text = notices,
+            FontFamily = new Microsoft.UI.Xaml.Media.FontFamily("Consolas"),
+            FontSize = 12,
+            TextWrapping = TextWrapping.NoWrap,
+            IsTextSelectionEnabled = true
+        };
+        var noticesScroll = new ScrollViewer
+        {
+            Content = noticesText,
+            HorizontalScrollBarVisibility = ScrollBarVisibility.Auto,
+            HorizontalScrollMode = ScrollMode.Auto,
+            VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+            MaxHeight = 280
+        };
+        // 枠線はテーマリソースを用い、両テーマで視認できるようにする（未定義時は灰色にフォールバック）
+        Microsoft.UI.Xaml.Media.Brush strokeBrush =
+            Application.Current.Resources.TryGetValue("CardStrokeColorDefaultBrush", out var b) && b is Microsoft.UI.Xaml.Media.Brush br
+                ? br
+                : new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Gray);
+        panel.Children.Add(new Border
+        {
+            Child = noticesScroll,
+            BorderBrush = strokeBrush,
+            BorderThickness = new Thickness(1),
+            CornerRadius = new CornerRadius(4),
+            Padding = new Thickness(8)
+        });
+
+        return panel;
+    }
+
     // [ファイル]→[開く]: ファイルピッカーでMarkdownファイルを選択して開く
     private async void OnOpenClick(object s, RoutedEventArgs e)
     {
