@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Window
+    x:Class="MDV_App.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:MDV_App"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="MDV.App"
+    mc:Ignorable="d">
+    <Window.SystemBackdrop>
+        <MicaBackdrop />
+    </Window.SystemBackdrop>
+
+    <Grid AllowDrop="True" DragOver="OnDragOver" Drop="OnDrop">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TitleBar x:Name="AppTitleBar" Title="MDV.App">
+            <TitleBar.IconSource>
+                <ImageIconSource ImageSource="Assets/AppIcon.ico" />
+            </TitleBar.IconSource>
+        </TitleBar>
+
+        <!-- メニューバー + テーマ切替アイコン -->
+        <Grid Grid.Row="1">
+            <MenuBar>
+                <MenuBarItem Title="ファイル">
+                    <MenuFlyoutItem Text="開く" Click="OnOpenClick"/>
+                    <MenuFlyoutSeparator/>
+                    <MenuFlyoutItem Text="終了" Click="OnExitClick"/>
+                </MenuBarItem>
+                <MenuBarItem Title="表示">
+                    <MenuFlyoutSubItem Text="テーマ">
+                        <MenuFlyoutItem Text="ライト" Click="OnThemeLight"/>
+                        <MenuFlyoutItem Text="ダーク" Click="OnThemeDark"/>
+                        <MenuFlyoutItem Text="システムに合わせる" Click="OnThemeSystem"/>
+                    </MenuFlyoutSubItem>
+                    <MenuFlyoutItem Text="文字を大きく" Click="OnZoomIn"/>
+                    <MenuFlyoutItem Text="文字を小さく" Click="OnZoomOut"/>
+                    <MenuFlyoutItem Text="文字サイズをリセット" Click="OnZoomReset"/>
+                    <MenuFlyoutSeparator/>
+                    <MenuFlyoutItem Text="再読み込み" Click="OnReload"/>
+                    <MenuFlyoutItem Text="ステータスバー表示切替" Click="OnToggleStatusBar"/>
+                </MenuBarItem>
+            </MenuBar>
+            <Button x:Name="ThemeToggle" Click="OnThemeToggle"
+                    HorizontalAlignment="Right" Background="Transparent" BorderThickness="0"
+                    Content="🌙" FontSize="16" Margin="0,0,8,0"/>
+        </Grid>
+
+        <!-- 本文 -->
+        <WebView2 x:Name="ContentView" Grid.Row="2"/>
+
+        <!-- ステータスバー -->
+        <Grid x:Name="StatusBar" Grid.Row="3" Padding="8,2" Background="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock x:Name="EncodingText" Grid.Column="0" Text=""/>
+            <TextBlock x:Name="LineEndingText" Grid.Column="1" Text=""/>
+        </Grid>
+    </Grid>
+</Window>

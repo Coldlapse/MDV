@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "MDV.App (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "MDV.App (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
