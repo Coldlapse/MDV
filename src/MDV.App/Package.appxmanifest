@@ -10,7 +10,7 @@
   <Identity
     Name="kajiyajp.MDV"
     Publisher="CN=kajiyajp"
-    Version="1.0.1.0" />
+    Version="1.0.2.0" />
 
   <mp:PhoneIdentity PhoneProductId="924B0285-C2B0-431E-9799-FBE95DCCCAFA" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
@@ -46,6 +46,7 @@
         <uap:Extension Category="windows.fileTypeAssociation">
           <uap:FileTypeAssociation Name="markdown">
             <uap:DisplayName>Markdown ドキュメント</uap:DisplayName>
+            <uap:Logo>Assets\MdFileIcon.png</uap:Logo>
             <uap:SupportedFileTypes>
               <uap:FileType>.md</uap:FileType>
               <uap:FileType>.markdown</uap:FileType>
