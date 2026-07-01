@@ -108,6 +108,6 @@ Windows 11 のみ
 
 ## ライセンス
 
-本ソフトウェアは [MIT License](LICENSE) の下で公開されています。
+本ソフトウェアは [MIT License](https://github.com/kajiyajp/MDV/blob/main/LICENSE) の下で公開されています。
 
-同梱・利用しているサードパーティ製ソフトウェア（KaTeX / Mermaid / highlight.js / github-markdown-css / Markdig ほか）のライセンスは [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) を参照してください。
+同梱・利用しているサードパーティ製ソフトウェア（KaTeX / Mermaid / highlight.js / github-markdown-css / Markdig ほか）のライセンスは [THIRD-PARTY-NOTICES.md](https://github.com/kajiyajp/MDV/blob/main/THIRD-PARTY-NOTICES.md) を参照してください。
