@@ -138,7 +138,10 @@ public sealed partial class MainWindow : Window
 
             EncodingText.Text = doc.EncodingDisplay;
             LineEndingText.Text = LineEndingDetector.ToDisplay(doc.LineEnding);
-            this.Title = $"MDV — {Path.GetFileName(path)}";
+            // ウィンドウ名(タスクバー)と可視タイトルバーの両方を更新する
+            var title = $"MDV — {Path.GetFileName(path)}";
+            this.Title = title;
+            AppTitleBar.Title = title;
         }
         catch (Exception ex)
         {
