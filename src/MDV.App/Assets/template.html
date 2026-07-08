@@ -24,6 +24,14 @@
     }
     .markdown-body pre:hover .md-copy-btn { opacity: 1; }
     .md-copy-btn:hover { background: rgba(128,128,128,.3); }
+    /* 印刷時: github-markdown-css の本文色(#1F2328/#e6edf3)はテーマ用の準黒/準白のため、
+       プリンタの白黒(グレースケール)変換では薄いグレーになってしまう。
+       印刷時のみ純黒(#000)に強制して読みやすくする。 */
+    @media print {
+      body { background: #fff !important; }
+      .markdown-body { color: #000 !important; }
+      .md-copy-btn { display: none !important; }
+    }
   </style>
 </head>
 <body>
