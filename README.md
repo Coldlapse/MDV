@@ -8,6 +8,16 @@ MDV（Markdown Viewer）は、Markdown ファイルを開いて閲覧するこ�
 
 ## インストール
 
+### Microsoft Store（推奨）
+
+Microsoft Store で「**MDV - Markdown Viewer**」を検索してインストールできます。Store 版は Microsoft によって署名・配布されるため、**証明書の手動信頼は不要**で、更新も自動的に行われます。
+
+> 現在ストア審査中のため、公開後にストアの直接リンクをここへ掲載します。
+
+### GitHub Releases（自己署名版）
+
+Microsoft Store への一本化に伴い、今後の新規配布は Store が中心になります。以下は自己署名版を手動でインストールする場合の手順です（旧バージョン向け）。
+
 [Releases](https://github.com/kajiyajp/MDV/releases) から最新版をダウンロードしてください。
 
 1. `MDV.App_x.x.x.x_x64.msix` と `MDV_signing.cer` をダウンロード
@@ -71,7 +81,26 @@ dotnet run -c Debug
 dotnet test tests/MDV.Core.Tests
 ```
 
-### 配布用 MSIX の作成
+### 配布用パッケージの作成
+
+#### Microsoft Store 提出用（`.msixupload`・未署名）
+
+Store 提出用パッケージは Microsoft が署名するため、**署名なし**で作成します。生成した `.msixupload` を Partner Center にアップロードします。
+
+```powershell
+msbuild src/MDV.App/MDV.App.csproj /restore `
+  /p:Configuration=Release /p:Platform=x64 `
+  /p:AppxBundle=Always /p:AppxBundlePlatforms=x64 `
+  /p:UapAppxPackageBuildMode=StoreUpload `
+  /p:AppxPackageSigningEnabled=false `
+  /p:GenerateAppxPackageOnBuild=true
+```
+
+生成物: `src/MDV.App/AppPackages/MDV.App_<version>_x64_bundle.msixupload`
+
+> PowerShell で実行してください（Git Bash では `/p:` がパスとして誤変換されます）。
+
+#### 自己署名 MSIX（サイドロード / ローカル検証用）
 
 自己署名証明書で署名した自己完結型 MSIX を作成する例:
 
