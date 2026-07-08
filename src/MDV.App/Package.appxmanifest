@@ -8,15 +8,15 @@
   IgnorableNamespaces="uap rescap">
 
   <Identity
-    Name="kajiyajp.MDV"
-    Publisher="CN=kajiyajp"
+    Name="kajiya.jp.MDV-MarkdownViewer"
+    Publisher="CN=4B6E0E23-C6E1-4738-B976-2E451ECF7CB9"
     Version="1.0.4.0" />
 
   <mp:PhoneIdentity PhoneProductId="924B0285-C2B0-431E-9799-FBE95DCCCAFA" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>MDV</DisplayName>
-    <PublisherDisplayName>kajiyajp</PublisherDisplayName>
+    <DisplayName>MDV - Markdown Viewer</DisplayName>
+    <PublisherDisplayName>kajiya.jp</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
@@ -34,7 +34,7 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="$targetentrypoint$">
       <uap:VisualElements
-        DisplayName="MDV"
+        DisplayName="MDV - Markdown Viewer"
         Description="Markdown ビューア"
         BackgroundColor="transparent"
         Square150x150Logo="Assets\Square150x150Logo.png"
