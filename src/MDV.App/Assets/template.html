@@ -53,26 +53,82 @@
     }
     applyTheme();
     // コード色付け
-    document.querySelectorAll('pre code').forEach(function (el) { hljs.highlightElement(el); });
+    // ※各ベンダーライブラリの利用は存在確認+try/catchで囲み、
+    //   1つの失敗が後続の処理(ショートカット・コピーボタン等)を道連れにしないようにする
+    try {
+      if (typeof hljs !== 'undefined') {
+        document.querySelectorAll('pre code').forEach(function (el) { hljs.highlightElement(el); });
+      } else { console.error('hljs is not loaded'); }
+    } catch (e) { console.error('highlight error:', e); }
     // 数式
     // Markdig(UseMathematics)は $...$ / $$...$$ を解釈し、HTML上は \(...\) / \[...\] 形式の
     // <span class="math">/<div class="math"> として出力する（$ はHTMLに残らない）。
     // そのためKaTeXの自動描画にも \( \) / \[ \] の区切りを登録する必要がある。
-    renderMathInElement(document.body, {
-      delimiters: [
-        { left: '$$', right: '$$', display: true },
-        { left: '$',  right: '$',  display: false },
-        { left: '\\(', right: '\\)', display: false },
-        { left: '\\[', right: '\\]', display: true }
-      ]
-    });
+    try {
+      if (typeof renderMathInElement !== 'undefined') {
+        renderMathInElement(document.body, {
+          delimiters: [
+            { left: '$$', right: '$$', display: true },
+            { left: '$',  right: '$',  display: false },
+            { left: '\\(', right: '\\)', display: false },
+            { left: '\\[', right: '\\]', display: true }
+          ]
+        });
+      } else { console.error('KaTeX auto-render is not loaded'); }
+    } catch (e) { console.error('math render error:', e); }
     // Mermaid図
-    // ダークモード時はMermaidもダークテーマで描画
-    var __mermaidDark = document.documentElement.classList.contains('theme-dark') ||
-      (document.documentElement.classList.contains('theme-system') &&
-       window.matchMedia('(prefers-color-scheme: dark)').matches);
-    mermaid.initialize({ startOnLoad: false, theme: __mermaidDark ? 'dark' : 'default' });
-    mermaid.run({ querySelector: '.mermaid' });
+    // ダークモード時はMermaidもダークテーマで描画。
+    // 初回は同期的に mermaid.run() を呼び（従来どおりの確実な描画）、万一SVGが
+    // 生成されなかった図だけを setTimeout で最大3回まで再描画する。
+    // (Store認定テストで「図が生成されない」事象が非決定的に発生したための堅牢化。
+    //  requestAnimationFrame は非描画コンテキストで発火しない場合があるため使わず、
+    //  確実に発火する setTimeout を用いる)
+    (function () {
+      if (typeof mermaid === 'undefined') { console.error('mermaid is not loaded'); return; }
+      var __mermaidDark = document.documentElement.classList.contains('theme-dark') ||
+        (document.documentElement.classList.contains('theme-system') &&
+         window.matchMedia('(prefers-color-scheme: dark)').matches);
+      mermaid.initialize({ startOnLoad: false, theme: __mermaidDark ? 'dark' : 'default' });
+      // 再試行に備えて各図の元ソースを保持（描画失敗時に data-processed と内容を復元する）
+      var sources = [];
+      document.querySelectorAll('.mermaid').forEach(function (el) {
+        sources.push({ el: el, src: el.textContent });
+      });
+      if (sources.length === 0) return;
+      function unrendered() {
+        return sources.filter(function (s) {
+          var svg = s.el.querySelector('svg');
+          if (!svg) return true;                                   // 図が生成されていない
+          // Mermaidのエラーグラフィック(構文エラー時のbomb図)なら未描画扱いにして再試行する
+          if (svg.querySelector('.error-icon, .error-text')) return true;
+          return false;
+        });
+      }
+      function render(attempt) {
+        var targets = unrendered();
+        if (targets.length === 0) return;
+        if (attempt > 0) {
+          targets.forEach(function (s) {
+            s.el.removeAttribute('data-processed');
+            s.el.textContent = s.src;
+          });
+        }
+        var p;
+        try {
+          p = mermaid.run({ nodes: targets.map(function (s) { return s.el; }) });
+        } catch (e) {
+          console.error('mermaid render error:', e);
+        }
+        Promise.resolve(p)
+          .catch(function (e) { console.error('mermaid render error:', e); })
+          .then(function () {
+            if (unrendered().length > 0 && attempt < 3) {
+              setTimeout(function () { render(attempt + 1); }, 300);
+            }
+          });
+      }
+      render(0);   // 初回は同期実行。失敗した図のみ上の setTimeout で再試行する。
+    })();
     // ホスト(C#)からテーマ変更を受けるためのフック
     window.__setTheme = function (cls) {
       document.documentElement.className = cls;
