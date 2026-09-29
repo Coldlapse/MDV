@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  日本語(既定言語)の UI 文字列。
+  言語を追加するときは docs/translations/Resources.template.resw を
+  Strings/<言語タグ>/Resources.resw にコピーして翻訳する(docs/translations/README.md 参照)。
+  キーを追加・変更したら、全言語とテンプレートにも同じキーを追加すること(テストで検査される)。
+-->
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+
+  <!-- WebView2 の既定 UI(右クリックメニュー等)の言語 -->
+  <data name="WebViewLanguage" xml:space="preserve">
+    <value>ja-JP</value>
+  </data>
+
+  <!-- パッケージマニフェスト -->
+  <data name="AppDescription" xml:space="preserve">
+    <value>Markdown ビューア</value>
+  </data>
+  <data name="FileTypeDisplayName" xml:space="preserve">
+    <value>Markdown ドキュメント</value>
+  </data>
+
+  <!-- メニュー(MainWindow.xaml の x:Uid) -->
+  <data name="MenuFile.Title" xml:space="preserve">
+    <value>ファイル</value>
+  </data>
+  <data name="MenuOpen.Text" xml:space="preserve">
+    <value>開く</value>
+  </data>
+  <data name="MenuPrint.Text" xml:space="preserve">
+    <value>印刷</value>
+  </data>
+  <data name="MenuExit.Text" xml:space="preserve">
+    <value>終了</value>
+  </data>
+  <data name="MenuView.Title" xml:space="preserve">
+    <value>表示</value>
+  </data>
+  <data name="MenuTheme.Text" xml:space="preserve">
+    <value>テーマ</value>
+  </data>
+  <data name="MenuThemeLight.Text" xml:space="preserve">
+    <value>ライト</value>
+  </data>
+  <data name="MenuThemeDark.Text" xml:space="preserve">
+    <value>ダーク</value>
+  </data>
+  <data name="MenuThemeSystem.Text" xml:space="preserve">
+    <value>システムに合わせる</value>
+  </data>
+  <data name="MenuZoomIn.Text" xml:space="preserve">
+    <value>文字を大きく</value>
+  </data>
+  <data name="MenuZoomOut.Text" xml:space="preserve">
+    <value>文字を小さく</value>
+  </data>
+  <data name="MenuZoomReset.Text" xml:space="preserve">
+    <value>文字サイズをリセット</value>
+  </data>
+  <data name="MenuReload.Text" xml:space="preserve">
+    <value>再読み込み</value>
+  </data>
+  <data name="MenuToggleStatusBar.Text" xml:space="preserve">
+    <value>ステータスバー表示切替</value>
+  </data>
+  <data name="MenuHelp.Title" xml:space="preserve">
+    <value>ヘルプ</value>
+  </data>
+  <data name="MenuAbout.Text" xml:space="preserve">
+    <value>このアプリについて</value>
+  </data>
+
+  <!-- 本文の右クリックメニュー -->
+  <data name="ContextMenuReload" xml:space="preserve">
+    <value>再読み込み</value>
+  </data>
+
+  <!-- コードブロックのコピーボタン(template.html) -->
+  <data name="CopyButton" xml:space="preserve">
+    <value>コピー</value>
+  </data>
+  <data name="CopyButtonDone" xml:space="preserve">
+    <value>コピーしました</value>
+  </data>
+
+  <!-- ステータスバー -->
+  <data name="LineEndingMixed" xml:space="preserve">
+    <value>混在</value>
+  </data>
+
+  <!-- ダイアログ共通 -->
+  <data name="DialogClose" xml:space="preserve">
+    <value>閉じる</value>
+  </data>
+
+  <!-- ファイルを開けないときのダイアログ -->
+  <data name="OpenErrorTitle" xml:space="preserve">
+    <value>ファイルを開けません</value>
+  </data>
+  <data name="OpenErrorNotFound" xml:space="preserve">
+    <value>指定されたファイルが見つかりませんでした。</value>
+  </data>
+  <data name="OpenErrorGeneric" xml:space="preserve">
+    <value>ファイルの読み込み中にエラーが発生しました。</value>
+  </data>
+
+  <!-- 「このアプリについて」ダイアログ -->
+  <data name="AboutTitle" xml:space="preserve">
+    <value>このアプリについて</value>
+  </data>
+  <data name="AboutVersion" xml:space="preserve">
+    <value>{0}  バージョン {1}</value>
+  </data>
+  <data name="AboutDescription" xml:space="preserve">
+    <value>Windows 11 ネイティブの閲覧専用 Markdown ビューア</value>
+  </data>
+  <data name="AboutLicense" xml:space="preserve">
+    <value>本ソフトウェアは MIT License の下で公開されています。</value>
+  </data>
+  <data name="AboutGitHubLink" xml:space="preserve">
+    <value>GitHub リポジトリを開く</value>
+  </data>
+  <data name="AboutThirdPartyHeader" xml:space="preserve">
+    <value>サードパーティ ライセンス</value>
+  </data>
+  <data name="AboutThirdPartyLoadError" xml:space="preserve">
+    <value>サードパーティ ライセンス情報を読み込めませんでした。</value>
+  </data>
+</root>

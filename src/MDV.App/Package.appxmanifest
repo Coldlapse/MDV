@@ -35,7 +35,7 @@
       EntryPoint="$targetentrypoint$">
       <uap:VisualElements
         DisplayName="MDV - Markdown Viewer"
-        Description="Markdown ビューア"
+        Description="ms-resource:AppDescription"
         BackgroundColor="transparent"
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Square44x44Logo.png">
@@ -45,7 +45,7 @@
       <Extensions>
         <uap:Extension Category="windows.fileTypeAssociation">
           <uap:FileTypeAssociation Name="markdown">
-            <uap:DisplayName>Markdown ドキュメント</uap:DisplayName>
+            <uap:DisplayName>ms-resource:FileTypeDisplayName</uap:DisplayName>
             <uap:Logo>Assets\MdFileIcon.png</uap:Logo>
             <uap:SupportedFileTypes>
               <uap:FileType>.md</uap:FileType>

@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  MDV translation template
+  ========================
+  1. Copy this file to  src/MDV.App/Strings/<language-tag>/Resources.resw
+     (e.g. src/MDV.App/Strings/fr-FR/Resources.resw). See docs/translations/README.md.
+  2. Replace the text inside every <value> with your translation.
+     The English text is only a reference; the Japanese original and the context are in <comment>.
+  3. Do NOT change any name="..." attribute, and keep placeholders such as {0} / {1}.
+  4. The <comment> elements are for translators only; you may keep or delete them.
+-->
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+
+  <data name="WebViewLanguage" xml:space="preserve">
+    <value>en-US</value>
+    <comment>NOT a sentence. BCP-47 tag of your language (same as the folder name, e.g. fr-FR). Sets the language of the built-in right-click menu of the document area. | ja: ja-JP</comment>
+  </data>
+
+  <data name="AppDescription" xml:space="preserve">
+    <value>Markdown viewer</value>
+    <comment>Short app description shown by Windows (Start menu / Settings). | ja: Markdown ビューア</comment>
+  </data>
+  <data name="FileTypeDisplayName" xml:space="preserve">
+    <value>Markdown document</value>
+    <comment>File type name of .md files shown in Explorer ("Type" column, "Open with"). | ja: Markdown ドキュメント</comment>
+  </data>
+
+  <data name="MenuFile.Title" xml:space="preserve">
+    <value>File</value>
+    <comment>Menu bar: top-level menu. | ja: ファイル</comment>
+  </data>
+  <data name="MenuOpen.Text" xml:space="preserve">
+    <value>Open</value>
+    <comment>File menu: open a Markdown file (Ctrl+O). | ja: 開く</comment>
+  </data>
+  <data name="MenuPrint.Text" xml:space="preserve">
+    <value>Print</value>
+    <comment>File menu: print the document (Ctrl+P). | ja: 印刷</comment>
+  </data>
+  <data name="MenuExit.Text" xml:space="preserve">
+    <value>Exit</value>
+    <comment>File menu: quit the app (Alt+F4). | ja: 終了</comment>
+  </data>
+  <data name="MenuView.Title" xml:space="preserve">
+    <value>View</value>
+    <comment>Menu bar: top-level menu. | ja: 表示</comment>
+  </data>
+  <data name="MenuTheme.Text" xml:space="preserve">
+    <value>Theme</value>
+    <comment>View menu: submenu for the color theme. | ja: テーマ</comment>
+  </data>
+  <data name="MenuThemeLight.Text" xml:space="preserve">
+    <value>Light</value>
+    <comment>Theme submenu: light theme. | ja: ライト</comment>
+  </data>
+  <data name="MenuThemeDark.Text" xml:space="preserve">
+    <value>Dark</value>
+    <comment>Theme submenu: dark theme. | ja: ダーク</comment>
+  </data>
+  <data name="MenuThemeSystem.Text" xml:space="preserve">
+    <value>Use system setting</value>
+    <comment>Theme submenu: follow the Windows light/dark setting. | ja: システムに合わせる</comment>
+  </data>
+  <data name="MenuZoomIn.Text" xml:space="preserve">
+    <value>Larger text</value>
+    <comment>View menu: zoom in (Ctrl +). | ja: 文字を大きく</comment>
+  </data>
+  <data name="MenuZoomOut.Text" xml:space="preserve">
+    <value>Smaller text</value>
+    <comment>View menu: zoom out (Ctrl -). | ja: 文字を小さく</comment>
+  </data>
+  <data name="MenuZoomReset.Text" xml:space="preserve">
+    <value>Reset text size</value>
+    <comment>View menu: reset zoom to 100% (Ctrl+0). | ja: 文字サイズをリセット</comment>
+  </data>
+  <data name="MenuReload.Text" xml:space="preserve">
+    <value>Reload</value>
+    <comment>View menu: re-read the current file from disk (F5). | ja: 再読み込み</comment>
+  </data>
+  <data name="MenuToggleStatusBar.Text" xml:space="preserve">
+    <value>Show/hide status bar</value>
+    <comment>View menu: toggle the status bar (encoding / line endings) at the bottom. | ja: ステータスバー表示切替</comment>
+  </data>
+  <data name="MenuHelp.Title" xml:space="preserve">
+    <value>Help</value>
+    <comment>Menu bar: top-level menu. | ja: ヘルプ</comment>
+  </data>
+  <data name="MenuAbout.Text" xml:space="preserve">
+    <value>About this app</value>
+    <comment>Help menu: open the About dialog (F1). | ja: このアプリについて</comment>
+  </data>
+
+  <data name="ContextMenuReload" xml:space="preserve">
+    <value>Reload</value>
+    <comment>Right-click menu of the document: re-read the current file. Usually the same as MenuReload.Text. | ja: 再読み込み</comment>
+  </data>
+
+  <data name="CopyButton" xml:space="preserve">
+    <value>Copy</value>
+    <comment>Small button on the top-right of a code block (shown on hover). Keep it short. | ja: コピー</comment>
+  </data>
+  <data name="CopyButtonDone" xml:space="preserve">
+    <value>Copied</value>
+    <comment>Shown on the same button for about one second after copying. Keep it short. | ja: コピーしました</comment>
+  </data>
+
+  <data name="LineEndingMixed" xml:space="preserve">
+    <value>Mixed</value>
+    <comment>Status bar: the file mixes CRLF / LF / CR line endings. Keep it short. | ja: 混在</comment>
+  </data>
+
+  <data name="DialogClose" xml:space="preserve">
+    <value>Close</value>
+    <comment>Button that closes a dialog. | ja: 閉じる</comment>
+  </data>
+
+  <data name="OpenErrorTitle" xml:space="preserve">
+    <value>Cannot open the file</value>
+    <comment>Title of the error dialog shown when a file cannot be opened. | ja: ファイルを開けません</comment>
+  </data>
+  <data name="OpenErrorNotFound" xml:space="preserve">
+    <value>The specified file was not found.</value>
+    <comment>Error dialog body: the file does not exist. | ja: 指定されたファイルが見つかりませんでした。</comment>
+  </data>
+  <data name="OpenErrorGeneric" xml:space="preserve">
+    <value>An error occurred while reading the file.</value>
+    <comment>Error dialog body: any other read error. The technical error message is shown on the next line. | ja: ファイルの読み込み中にエラーが発生しました。</comment>
+  </data>
+
+  <data name="AboutTitle" xml:space="preserve">
+    <value>About this app</value>
+    <comment>Title of the About dialog. | ja: このアプリについて</comment>
+  </data>
+  <data name="AboutVersion" xml:space="preserve">
+    <value>{0}  version {1}</value>
+    <comment>About dialog heading. {0} = app name, {1} = version number (e.g. 1.0.5.0). Keep both placeholders. | ja: {0}  バージョン {1}</comment>
+  </data>
+  <data name="AboutDescription" xml:space="preserve">
+    <value>A native, read-only Markdown viewer for Windows 11</value>
+    <comment>About dialog: one-line description of the app. | ja: Windows 11 ネイティブの閲覧専用 Markdown ビューア</comment>
+  </data>
+  <data name="AboutLicense" xml:space="preserve">
+    <value>This software is released under the MIT License.</value>
+    <comment>About dialog: license notice. Keep "MIT License" as is. | ja: 本ソフトウェアは MIT License の下で公開されています。</comment>
+  </data>
+  <data name="AboutGitHubLink" xml:space="preserve">
+    <value>Open the GitHub repository</value>
+    <comment>About dialog: link that opens the project page in the browser. | ja: GitHub リポジトリを開く</comment>
+  </data>
+  <data name="AboutThirdPartyHeader" xml:space="preserve">
+    <value>Third-party licenses</value>
+    <comment>About dialog: heading above the list of bundled open-source libraries. | ja: サードパーティ ライセンス</comment>
+  </data>
+  <data name="AboutThirdPartyLoadError" xml:space="preserve">
+    <value>Could not load the third-party license information.</value>
+    <comment>About dialog: shown instead of the license list if the file cannot be read. | ja: サードパーティ ライセンス情報を読み込めませんでした。</comment>
+  </data>
+</root>

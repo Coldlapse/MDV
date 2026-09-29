@@ -46,9 +46,9 @@ public sealed partial class MainWindow : Window
         if (_webReady) return;
 
         EncodingDetector.RegisterProviders();
-        // WebView2の既定UI(右クリックメニュー等)を日本語にするため、言語を指定した環境で初期化する
+        // WebView2の既定UI(右クリックメニュー等)をアプリの表示言語に合わせるため、言語を指定した環境で初期化する
         var env = await CoreWebView2Environment.CreateWithOptionsAsync(null, null,
-            new CoreWebView2EnvironmentOptions { Language = "ja-JP" });
+            new CoreWebView2EnvironmentOptions { Language = Localizer.Get("WebViewLanguage") });
         await ContentView.EnsureCoreWebView2Async(env);
 
         var assetsDir = Path.Combine(AppContext.BaseDirectory, "Assets");
@@ -57,7 +57,7 @@ public sealed partial class MainWindow : Window
             "vendor", Path.Combine(assetsDir, "vendor"),
             CoreWebView2HostResourceAccessKind.Allow);
 
-        _template = File.ReadAllText(Path.Combine(assetsDir, "template.html"));
+        _template = LocalizeTemplate(File.ReadAllText(Path.Combine(assetsDir, "template.html")));
 
         // 外部リンク(http/https)はアプリ内WebView2で遷移させず、既定ブラウザで開く
         ContentView.CoreWebView2.NewWindowRequested += (s, e) =>
@@ -88,6 +88,13 @@ public sealed partial class MainWindow : Window
 
         LoadSettings();
     }
+
+    // template.html 内のUI文字列プレースホルダ(コピーボタン)を表示言語の文字列に置き換える。
+    // JSの文字列リテラルとして埋め込むため、JSONエンコード(引用符・</script>等をエスケープ)して渡す。
+    // 本文(Markdown)を埋め込む前のテンプレートに対して行うので、本文中の同じ文字列は置換されない。
+    private static string LocalizeTemplate(string template) => template
+        .Replace("{{COPY_LABEL}}", System.Text.Json.JsonSerializer.Serialize(Localizer.Get("CopyButton")))
+        .Replace("{{COPIED_LABEL}}", System.Text.Json.JsonSerializer.Serialize(Localizer.Get("CopyButtonDone")));
 
     // 外部URIを既定のブラウザ（既定アプリ）で開く
     private static async void LaunchExternal(string uri)
@@ -121,7 +128,7 @@ public sealed partial class MainWindow : Window
                     "", null, CoreWebView2ContextMenuItemKind.Separator));
 
             var reload = sender.Environment.CreateContextMenuItem(
-                "再読み込み", null, CoreWebView2ContextMenuItemKind.Command);
+                Localizer.Get("ContextMenuReload"), null, CoreWebView2ContextMenuItemKind.Command);
             reload.CustomItemSelected += (s2, a2) =>
                 DispatcherQueue.TryEnqueue(async () =>
                 {
@@ -218,7 +225,10 @@ public sealed partial class MainWindow : Window
             ApplyZoom(_zoomFactor);
 
             EncodingText.Text = doc.EncodingDisplay;
-            LineEndingText.Text = LineEndingDetector.ToDisplay(doc.LineEnding);
+            // 「混在」だけは言語依存の語のため、表示言語の文字列に差し替える（CRLF/LF/CRは共通表記）
+            LineEndingText.Text = doc.LineEnding == LineEndingKind.Mixed
+                ? Localizer.Get("LineEndingMixed")
+                : LineEndingDetector.ToDisplay(doc.LineEnding);
             // ウィンドウ名(タスクバー)と可視タイトルバーの両方を更新する
             var title = $"MDV — {Path.GetFileName(path)}";
             this.Title = title;
@@ -243,11 +253,11 @@ public sealed partial class MainWindow : Window
     {
         var dialog = new ContentDialog
         {
-            Title = "ファイルを開けません",
+            Title = Localizer.Get("OpenErrorTitle"),
             Content = ex is FileNotFoundException
-                ? "指定されたファイルが見つかりませんでした。"
-                : $"ファイルの読み込み中にエラーが発生しました。\n{ex.Message}",
-            CloseButtonText = "閉じる",
+                ? Localizer.Get("OpenErrorNotFound")
+                : $"{Localizer.Get("OpenErrorGeneric")}\n{ex.Message}",
+            CloseButtonText = Localizer.Get("DialogClose"),
             XamlRoot = this.Content.XamlRoot
         };
         await dialog.ShowAsync();
@@ -258,9 +268,9 @@ public sealed partial class MainWindow : Window
     {
         var dialog = new ContentDialog
         {
-            Title = "このアプリについて",
+            Title = Localizer.Get("AboutTitle"),
             Content = BuildAboutContent(),
-            CloseButtonText = "閉じる",
+            CloseButtonText = Localizer.Get("DialogClose"),
             XamlRoot = this.Content.XamlRoot,
             // ダイアログをウィンドウの現在テーマに合わせる（ライト/ダーク両対応）
             RequestedTheme = (this.Content as FrameworkElement)?.RequestedTheme ?? ElementTheme.Default
@@ -295,40 +305,40 @@ public sealed partial class MainWindow : Window
         }
         catch
         {
-            notices = "サードパーティ ライセンス情報を読み込めませんでした。";
+            notices = Localizer.Get("AboutThirdPartyLoadError");
         }
 
         var panel = new StackPanel { Spacing = 6 };
 
         panel.Children.Add(new TextBlock
         {
-            Text = $"{appName}  バージョン {version}",
+            Text = string.Format(Localizer.Get("AboutVersion"), appName, version),
             FontWeight = Microsoft.UI.Text.FontWeights.SemiBold,
             FontSize = 18
         });
         panel.Children.Add(new TextBlock
         {
-            Text = "Windows 11 ネイティブの閲覧専用 Markdown ビューア",
+            Text = Localizer.Get("AboutDescription"),
             TextWrapping = TextWrapping.Wrap,
             Opacity = 0.8
         });
         panel.Children.Add(new TextBlock { Text = "Copyright (c) 2026 kajiyajp", TextWrapping = TextWrapping.Wrap });
         panel.Children.Add(new TextBlock
         {
-            Text = "本ソフトウェアは MIT License の下で公開されています。",
+            Text = Localizer.Get("AboutLicense"),
             TextWrapping = TextWrapping.Wrap
         });
 
         // GitHubリンク（クリックで既定ブラウザが開く。オフラインでも下のライセンス本文は読める）。
         // 注: WinUI3デスクトップでは HyperlinkButton.NavigateUri が自動でブラウザを開かないため、
         //     アプリ本体と同じ Launcher.LaunchUriAsync 経由(LaunchExternal)で明示的に開く。
-        var githubLink = new HyperlinkButton { Content = "GitHub リポジトリを開く", Padding = new Thickness(0) };
+        var githubLink = new HyperlinkButton { Content = Localizer.Get("AboutGitHubLink"), Padding = new Thickness(0) };
         githubLink.Click += (s, e) => LaunchExternal("https://github.com/kajiyajp/MDV");
         panel.Children.Add(githubLink);
 
         panel.Children.Add(new TextBlock
         {
-            Text = "サードパーティ ライセンス",
+            Text = Localizer.Get("AboutThirdPartyHeader"),
             FontWeight = Microsoft.UI.Text.FontWeights.SemiBold,
             FontSize = 15,
             Margin = new Thickness(0, 6, 0, 0)

@@ -26,50 +26,50 @@
             </TitleBar.IconSource>
         </TitleBar>
 
-        <!-- メニューバー + テーマ切替アイコン -->
+        <!-- メニューバー + テーマ切替アイコン(文字列は x:Uid で Strings/<言語>/Resources.resw から読み込む) -->
         <Grid Grid.Row="1">
             <MenuBar>
-                <MenuBarItem Title="ファイル">
-                    <MenuFlyoutItem Text="開く" Click="OnOpenClick">
+                <MenuBarItem x:Uid="MenuFile">
+                    <MenuFlyoutItem x:Uid="MenuOpen" Click="OnOpenClick">
                         <MenuFlyoutItem.KeyboardAccelerators>
                             <KeyboardAccelerator Key="O" Modifiers="Control"/>
                         </MenuFlyoutItem.KeyboardAccelerators>
                     </MenuFlyoutItem>
-                    <MenuFlyoutItem Text="印刷" Click="OnPrint">
+                    <MenuFlyoutItem x:Uid="MenuPrint" Click="OnPrint">
                         <MenuFlyoutItem.KeyboardAccelerators>
                             <KeyboardAccelerator Key="P" Modifiers="Control"/>
                         </MenuFlyoutItem.KeyboardAccelerators>
                     </MenuFlyoutItem>
                     <MenuFlyoutSeparator/>
-                    <MenuFlyoutItem Text="終了" Click="OnExitClick">
+                    <MenuFlyoutItem x:Uid="MenuExit" Click="OnExitClick">
                         <MenuFlyoutItem.KeyboardAccelerators>
                             <KeyboardAccelerator Key="F4" Modifiers="Menu"/>
                         </MenuFlyoutItem.KeyboardAccelerators>
                     </MenuFlyoutItem>
                 </MenuBarItem>
-                <MenuBarItem Title="表示">
-                    <MenuFlyoutSubItem Text="テーマ">
-                        <MenuFlyoutItem Text="ライト" Click="OnThemeLight"/>
-                        <MenuFlyoutItem Text="ダーク" Click="OnThemeDark"/>
-                        <MenuFlyoutItem Text="システムに合わせる" Click="OnThemeSystem"/>
+                <MenuBarItem x:Uid="MenuView">
+                    <MenuFlyoutSubItem x:Uid="MenuTheme">
+                        <MenuFlyoutItem x:Uid="MenuThemeLight" Click="OnThemeLight"/>
+                        <MenuFlyoutItem x:Uid="MenuThemeDark" Click="OnThemeDark"/>
+                        <MenuFlyoutItem x:Uid="MenuThemeSystem" Click="OnThemeSystem"/>
                     </MenuFlyoutSubItem>
-                    <MenuFlyoutItem Text="文字を大きく" Click="OnZoomIn" KeyboardAcceleratorTextOverride="Ctrl +"/>
-                    <MenuFlyoutItem Text="文字を小さく" Click="OnZoomOut" KeyboardAcceleratorTextOverride="Ctrl -"/>
-                    <MenuFlyoutItem Text="文字サイズをリセット" Click="OnZoomReset">
+                    <MenuFlyoutItem x:Uid="MenuZoomIn" Click="OnZoomIn" KeyboardAcceleratorTextOverride="Ctrl +"/>
+                    <MenuFlyoutItem x:Uid="MenuZoomOut" Click="OnZoomOut" KeyboardAcceleratorTextOverride="Ctrl -"/>
+                    <MenuFlyoutItem x:Uid="MenuZoomReset" Click="OnZoomReset">
                         <MenuFlyoutItem.KeyboardAccelerators>
                             <KeyboardAccelerator Key="Number0" Modifiers="Control"/>
                         </MenuFlyoutItem.KeyboardAccelerators>
                     </MenuFlyoutItem>
                     <MenuFlyoutSeparator/>
-                    <MenuFlyoutItem Text="再読み込み" Click="OnReload">
+                    <MenuFlyoutItem x:Uid="MenuReload" Click="OnReload">
                         <MenuFlyoutItem.KeyboardAccelerators>
                             <KeyboardAccelerator Key="F5"/>
                         </MenuFlyoutItem.KeyboardAccelerators>
                     </MenuFlyoutItem>
-                    <MenuFlyoutItem Text="ステータスバー表示切替" Click="OnToggleStatusBar"/>
+                    <MenuFlyoutItem x:Uid="MenuToggleStatusBar" Click="OnToggleStatusBar"/>
                 </MenuBarItem>
-                <MenuBarItem Title="ヘルプ">
-                    <MenuFlyoutItem Text="このアプリについて" Click="OnAboutClick">
+                <MenuBarItem x:Uid="MenuHelp">
+                    <MenuFlyoutItem x:Uid="MenuAbout" Click="OnAboutClick">
                         <MenuFlyoutItem.KeyboardAccelerators>
                             <KeyboardAccelerator Key="F1"/>
                         </MenuFlyoutItem.KeyboardAccelerators>
