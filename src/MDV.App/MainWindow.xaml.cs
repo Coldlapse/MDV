@@ -49,6 +49,10 @@ public sealed partial class MainWindow : Window
         // WebView2の既定UI(右クリックメニュー等)をアプリの表示言語に合わせるため、言語を指定した環境で初期化する
         var env = await CoreWebView2Environment.CreateWithOptionsAsync(null, null,
             new CoreWebView2EnvironmentOptions { Language = Localizer.Get("WebViewLanguage") });
+        // 本文の背景を透明にし、ウィンドウの背景(Mica)がそのまま本文の背景になるようにする
+        // （本文側のCSSも背景を透明にしている。template.html 参照）。
+        // 初期化前に設定しないと、読み込み中に既定の背景色が一瞬見えてしまう
+        ContentView.DefaultBackgroundColor = Microsoft.UI.Colors.Transparent;
         await ContentView.EnsureCoreWebView2Async(env);
 
         var assetsDir = Path.Combine(AppContext.BaseDirectory, "Assets");
@@ -431,6 +435,15 @@ public sealed partial class MainWindow : Window
         if (_webReady)
             try
             {
+                // WebView2自体の配色(スクロールバー・prefers-color-scheme)もアプリのテーマに合わせる。
+                // 未設定だとOSの配色のままになり、例えばOSがダークでアプリがライトのとき
+                // 本文だけライト・スクロールバー等はダークという不一致が起きる
+                ContentView.CoreWebView2.Profile.PreferredColorScheme = mode switch
+                {
+                    ThemeMode.Light => CoreWebView2PreferredColorScheme.Light,
+                    ThemeMode.Dark => CoreWebView2PreferredColorScheme.Dark,
+                    _ => CoreWebView2PreferredColorScheme.Auto
+                };
                 await ContentView.CoreWebView2.ExecuteScriptAsync(
                     $"window.__setTheme && window.__setTheme('{ThemeService.ToCssClass(mode)}')");
             }
