@@ -6,6 +6,7 @@ If there is no translation for that language, it falls back to Japanese.
 | Language | File |
 |---|---|
 | Japanese (default) | [`src/MDV.App/Strings/ja-JP/Resources.resw`](../../src/MDV.App/Strings/ja-JP/Resources.resw) |
+| Korean | [`src/MDV.App/Strings/ko-KR/Resources.resw`](../../src/MDV.App/Strings/ko-KR/Resources.resw) |
 
 ## Adding a language
 

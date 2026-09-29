@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  한국어 UI 문자열 (Korean).
+  docs/translations/Resources.template.resw 를 바탕으로 번역했다.
+-->
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+
+  <data name="WebViewLanguage" xml:space="preserve">
+    <value>ko-KR</value>
+  </data>
+
+  <data name="AppDescription" xml:space="preserve">
+    <value>Markdown 뷰어</value>
+  </data>
+  <data name="FileTypeDisplayName" xml:space="preserve">
+    <value>Markdown 문서</value>
+  </data>
+
+  <data name="MenuFile.Title" xml:space="preserve">
+    <value>파일</value>
+  </data>
+  <data name="MenuOpen.Text" xml:space="preserve">
+    <value>열기</value>
+  </data>
+  <data name="MenuPrint.Text" xml:space="preserve">
+    <value>인쇄</value>
+  </data>
+  <data name="MenuExit.Text" xml:space="preserve">
+    <value>종료</value>
+  </data>
+  <data name="MenuView.Title" xml:space="preserve">
+    <value>보기</value>
+  </data>
+  <data name="MenuTheme.Text" xml:space="preserve">
+    <value>테마</value>
+  </data>
+  <data name="MenuThemeLight.Text" xml:space="preserve">
+    <value>라이트</value>
+  </data>
+  <data name="MenuThemeDark.Text" xml:space="preserve">
+    <value>다크</value>
+  </data>
+  <data name="MenuThemeSystem.Text" xml:space="preserve">
+    <value>시스템 설정 사용</value>
+  </data>
+  <data name="MenuZoomIn.Text" xml:space="preserve">
+    <value>글자 크게</value>
+  </data>
+  <data name="MenuZoomOut.Text" xml:space="preserve">
+    <value>글자 작게</value>
+  </data>
+  <data name="MenuZoomReset.Text" xml:space="preserve">
+    <value>글자 크기 초기화</value>
+  </data>
+  <data name="MenuReload.Text" xml:space="preserve">
+    <value>새로 고침</value>
+  </data>
+  <data name="MenuToggleStatusBar.Text" xml:space="preserve">
+    <value>상태 표시줄 표시/숨기기</value>
+  </data>
+  <data name="MenuHelp.Title" xml:space="preserve">
+    <value>도움말</value>
+  </data>
+  <data name="MenuAbout.Text" xml:space="preserve">
+    <value>이 앱 정보</value>
+  </data>
+
+  <data name="ContextMenuReload" xml:space="preserve">
+    <value>새로 고침</value>
+  </data>
+
+  <data name="CopyButton" xml:space="preserve">
+    <value>복사</value>
+  </data>
+  <data name="CopyButtonDone" xml:space="preserve">
+    <value>복사했습니다</value>
+  </data>
+
+  <data name="LineEndingMixed" xml:space="preserve">
+    <value>혼합</value>
+  </data>
+
+  <data name="DialogClose" xml:space="preserve">
+    <value>닫기</value>
+  </data>
+
+  <data name="OpenErrorTitle" xml:space="preserve">
+    <value>파일을 열 수 없습니다</value>
+  </data>
+  <data name="OpenErrorNotFound" xml:space="preserve">
+    <value>지정한 파일을 찾을 수 없습니다.</value>
+  </data>
+  <data name="OpenErrorGeneric" xml:space="preserve">
+    <value>파일을 읽는 중 오류가 발생했습니다.</value>
+  </data>
+
+  <data name="AboutTitle" xml:space="preserve">
+    <value>이 앱 정보</value>
+  </data>
+  <data name="AboutVersion" xml:space="preserve">
+    <value>{0}  버전 {1}</value>
+  </data>
+  <data name="AboutDescription" xml:space="preserve">
+    <value>Windows 11 네이티브 읽기 전용 Markdown 뷰어</value>
+  </data>
+  <data name="AboutLicense" xml:space="preserve">
+    <value>이 소프트웨어는 MIT License에 따라 공개되어 있습니다.</value>
+  </data>
+  <data name="AboutGitHubLink" xml:space="preserve">
+    <value>GitHub 저장소 열기</value>
+  </data>
+  <data name="AboutThirdPartyHeader" xml:space="preserve">
+    <value>타사 라이선스</value>
+  </data>
+  <data name="AboutThirdPartyLoadError" xml:space="preserve">
+    <value>타사 라이선스 정보를 불러올 수 없습니다.</value>
+  </data>
+</root>
