@@ -7,6 +7,7 @@ the Windows display language, and falls back to Japanese if there is no translat
 |---|---|
 | Japanese (default) | [`src/MDV.App/Strings/ja-JP/Resources.resw`](../../src/MDV.App/Strings/ja-JP/Resources.resw) |
 | Korean | [`src/MDV.App/Strings/ko-KR/Resources.resw`](../../src/MDV.App/Strings/ko-KR/Resources.resw) |
+| English | [`src/MDV.App/Strings/en-US/Resources.resw`](../../src/MDV.App/Strings/en-US/Resources.resw) |
 
 ## Adding a language
 

@@ -55,10 +55,23 @@ public static partial class Localizer
         }
     }
 
-    /// <summary>言語タグをその言語自身の名称で返す(例: ko-KR → 한국어)。</summary>
+    /// <summary>
+    /// 言語タグをその言語自身の名称で返す(例: ko-KR → 한국어, en-US → English)。
+    /// 同じ言語の別地域(例: pt-BR と pt-PT)が同梱されている場合だけ地域名も付ける。
+    /// </summary>
     public static string NativeName(string tag)
     {
-        try { return new Windows.Globalization.Language(tag).NativeName; }
+        try
+        {
+            var lang = new Windows.Globalization.Language(tag);
+            var baseTag = string.IsNullOrEmpty(lang.Script)
+                ? tag.Split('-')[0]
+                : $"{tag.Split('-')[0]}-{lang.Script}";
+            var sameBase = AvailableLanguages().Count(l =>
+                l.StartsWith(baseTag + "-", StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(l, baseTag, StringComparison.OrdinalIgnoreCase));
+            return sameBase > 1 ? lang.NativeName : new Windows.Globalization.Language(baseTag).NativeName;
+        }
         catch { return tag; }
     }
 }

@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  English UI strings (en-US).
+  The same text is used as the reference in docs/translations/Resources.template.resw.
+-->
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+
+  <data name="WebViewLanguage" xml:space="preserve">
+    <value>en-US</value>
+  </data>
+
+  <data name="AppDescription" xml:space="preserve">
+    <value>Markdown viewer</value>
+  </data>
+  <data name="FileTypeDisplayName" xml:space="preserve">
+    <value>Markdown document</value>
+  </data>
+
+  <data name="MenuFile.Title" xml:space="preserve">
+    <value>File</value>
+  </data>
+  <data name="MenuOpen.Text" xml:space="preserve">
+    <value>Open</value>
+  </data>
+  <data name="MenuPrint.Text" xml:space="preserve">
+    <value>Print</value>
+  </data>
+  <data name="MenuExit.Text" xml:space="preserve">
+    <value>Exit</value>
+  </data>
+  <data name="MenuView.Title" xml:space="preserve">
+    <value>View</value>
+  </data>
+  <data name="MenuTheme.Text" xml:space="preserve">
+    <value>Theme</value>
+  </data>
+  <data name="MenuThemeLight.Text" xml:space="preserve">
+    <value>Light</value>
+  </data>
+  <data name="MenuThemeDark.Text" xml:space="preserve">
+    <value>Dark</value>
+  </data>
+  <data name="MenuThemeSystem.Text" xml:space="preserve">
+    <value>Use system setting</value>
+  </data>
+  <data name="MenuZoomIn.Text" xml:space="preserve">
+    <value>Larger text</value>
+  </data>
+  <data name="MenuZoomOut.Text" xml:space="preserve">
+    <value>Smaller text</value>
+  </data>
+  <data name="MenuZoomReset.Text" xml:space="preserve">
+    <value>Reset text size</value>
+  </data>
+  <data name="MenuReload.Text" xml:space="preserve">
+    <value>Reload</value>
+  </data>
+  <data name="MenuToggleStatusBar.Text" xml:space="preserve">
+    <value>Show/hide status bar</value>
+  </data>
+  <data name="MenuHelp.Title" xml:space="preserve">
+    <value>Help</value>
+  </data>
+  <data name="MenuAbout.Text" xml:space="preserve">
+    <value>About this app</value>
+  </data>
+
+  <data name="MenuLanguage.Text" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="MenuLanguageSystem" xml:space="preserve">
+    <value>Use system setting</value>
+  </data>
+  <data name="LanguageRestartTitle" xml:space="preserve">
+    <value>Change language</value>
+  </data>
+  <data name="LanguageRestartMessage" xml:space="preserve">
+    <value>The change will take effect after the app restarts.</value>
+  </data>
+  <data name="LanguageRestartNow" xml:space="preserve">
+    <value>Restart now</value>
+  </data>
+  <data name="LanguageRestartLater" xml:space="preserve">
+    <value>Later</value>
+  </data>
+
+  <data name="ContextMenuReload" xml:space="preserve">
+    <value>Reload</value>
+  </data>
+
+  <data name="CopyButton" xml:space="preserve">
+    <value>Copy</value>
+  </data>
+  <data name="CopyButtonDone" xml:space="preserve">
+    <value>Copied</value>
+  </data>
+
+  <data name="LineEndingMixed" xml:space="preserve">
+    <value>Mixed</value>
+  </data>
+
+  <data name="DialogClose" xml:space="preserve">
+    <value>Close</value>
+  </data>
+
+  <data name="OpenErrorTitle" xml:space="preserve">
+    <value>Cannot open the file</value>
+  </data>
+  <data name="OpenErrorNotFound" xml:space="preserve">
+    <value>The specified file was not found.</value>
+  </data>
+  <data name="OpenErrorGeneric" xml:space="preserve">
+    <value>An error occurred while reading the file.</value>
+  </data>
+
+  <data name="AboutTitle" xml:space="preserve">
+    <value>About this app</value>
+  </data>
+  <data name="AboutVersion" xml:space="preserve">
+    <value>{0}  version {1}</value>
+  </data>
+  <data name="AboutDescription" xml:space="preserve">
+    <value>A native, read-only Markdown viewer for Windows 11</value>
+  </data>
+  <data name="AboutLicense" xml:space="preserve">
+    <value>This software is released under the MIT License.</value>
+  </data>
+  <data name="AboutGitHubLink" xml:space="preserve">
+    <value>Open the GitHub repository</value>
+  </data>
+  <data name="AboutThirdPartyHeader" xml:space="preserve">
+    <value>Third-party licenses</value>
+  </data>
+  <data name="AboutThirdPartyLoadError" xml:space="preserve">
+    <value>Could not load the third-party license information.</value>
+  </data>
+
+  <data name="AboutContributors" xml:space="preserve">
+    <value>Contributors</value>
+  </data>
+  <data name="AboutCreditTranslationEnKo" xml:space="preserve">
+    <value>English and Korean translation</value>
+  </data>
+</root>
