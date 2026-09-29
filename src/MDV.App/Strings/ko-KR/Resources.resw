@@ -77,6 +77,25 @@
     <value>이 앱 정보</value>
   </data>
 
+  <data name="MenuLanguage.Text" xml:space="preserve">
+    <value>언어</value>
+  </data>
+  <data name="MenuLanguageSystem" xml:space="preserve">
+    <value>시스템 설정 사용</value>
+  </data>
+  <data name="LanguageRestartTitle" xml:space="preserve">
+    <value>언어 변경</value>
+  </data>
+  <data name="LanguageRestartMessage" xml:space="preserve">
+    <value>앱을 다시 시작하면 변경 내용이 적용됩니다.</value>
+  </data>
+  <data name="LanguageRestartNow" xml:space="preserve">
+    <value>지금 다시 시작</value>
+  </data>
+  <data name="LanguageRestartLater" xml:space="preserve">
+    <value>나중에</value>
+  </data>
+
   <data name="ContextMenuReload" xml:space="preserve">
     <value>새로 고침</value>
   </data>

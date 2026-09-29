@@ -53,6 +53,8 @@
                         <MenuFlyoutItem x:Uid="MenuThemeDark" Click="OnThemeDark"/>
                         <MenuFlyoutItem x:Uid="MenuThemeSystem" Click="OnThemeSystem"/>
                     </MenuFlyoutSubItem>
+                    <!-- 項目は翻訳のある言語から実行時に生成する(MainWindow.BuildLanguageMenu) -->
+                    <MenuFlyoutSubItem x:Name="LanguageMenu" x:Uid="MenuLanguage"/>
                     <MenuFlyoutItem x:Uid="MenuZoomIn" Click="OnZoomIn" KeyboardAcceleratorTextOverride="Ctrl +"/>
                     <MenuFlyoutItem x:Uid="MenuZoomOut" Click="OnZoomOut" KeyboardAcceleratorTextOverride="Ctrl -"/>
                     <MenuFlyoutItem x:Uid="MenuZoomReset" Click="OnZoomReset">

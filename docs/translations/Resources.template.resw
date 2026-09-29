@@ -102,6 +102,31 @@
     <comment>Help menu: open the About dialog (F1). | ja: このアプリについて</comment>
   </data>
 
+  <data name="MenuLanguage.Text" xml:space="preserve">
+    <value>Language</value>
+    <comment>View menu: submenu to choose the UI language. The languages themselves are listed by their own names automatically. | ja: 言語</comment>
+  </data>
+  <data name="MenuLanguageSystem" xml:space="preserve">
+    <value>Use system setting</value>
+    <comment>Language submenu: follow the Windows display language. | ja: システムに合わせる</comment>
+  </data>
+  <data name="LanguageRestartTitle" xml:space="preserve">
+    <value>Change language</value>
+    <comment>Title of the dialog shown after choosing a language. | ja: 言語の変更</comment>
+  </data>
+  <data name="LanguageRestartMessage" xml:space="preserve">
+    <value>The change will take effect after the app restarts.</value>
+    <comment>Body of the same dialog. | ja: 変更はアプリの再起動後に反映されます。</comment>
+  </data>
+  <data name="LanguageRestartNow" xml:space="preserve">
+    <value>Restart now</value>
+    <comment>Button: restart the app now (the open file is reopened). | ja: 今すぐ再起動</comment>
+  </data>
+  <data name="LanguageRestartLater" xml:space="preserve">
+    <value>Later</value>
+    <comment>Button: close the dialog without restarting. | ja: 後で</comment>
+  </data>
+
   <data name="ContextMenuReload" xml:space="preserve">
     <value>Reload</value>
     <comment>Right-click menu of the document: re-read the current file. Usually the same as MenuReload.Text. | ja: 再読み込み</comment>

@@ -39,6 +39,26 @@
   </ItemGroup>
 
   <!--
+    [表示]→[言語] に並べる言語の一覧を、Strings\<言語タグ>\ のフォルダ名からビルド時に生成する
+    (Localizer.BuiltInLanguages)。翻訳を追加する人はフォルダを置くだけでよく、コードの変更は不要。
+    ApplicationLanguages.ManifestLanguages は非パッケージ実行では空になるため使わない。
+  -->
+  <Target Name="MdvGenerateLanguageList" BeforeTargets="BeforeBuild">
+    <ItemGroup>
+      <_MdvLanguageDir Include="$([System.IO.Directory]::GetDirectories('$(MSBuildProjectDirectory)\Strings'))" />
+      <_MdvLanguage Include="@(_MdvLanguageDir->'%(Filename)%(Extension)')" />
+    </ItemGroup>
+    <PropertyGroup>
+      <_MdvLanguageArray>@(_MdvLanguage->'&quot;%(Identity)&quot;', ', ')</_MdvLanguageArray>
+    </PropertyGroup>
+    <WriteLinesToFile File="$(IntermediateOutputPath)Localizer.Languages.g.cs" Overwrite="true" WriteOnlyWhenDifferent="true"
+                      Lines="// &lt;auto-generated/&gt;;namespace MDV.App.Services%3B;public static partial class Localizer;{;    private static readonly string[] BuiltInLanguages = { $(_MdvLanguageArray) }%3B;}" />
+    <ItemGroup>
+      <Compile Include="$(IntermediateOutputPath)Localizer.Languages.g.cs" />
+    </ItemGroup>
+  </Target>
+
+  <!--
     リポジトリ直下の THIRD-PARTY-NOTICES.md を Assets として出力へコピーする。
     Link で Assets\ 配下に配置することで、単一の情報源を保ちつつ
     実行時に AppContext.BaseDirectory\Assets\THIRD-PARTY-NOTICES.md から読み込める。

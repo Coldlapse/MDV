@@ -1,7 +1,7 @@
 # Translating MDV
 
-MDV picks its UI language from the Windows display language.
-If there is no translation for that language, it falls back to Japanese.
+MDV uses the language chosen in **View → Language**. With **Use system setting** (the default) it follows
+the Windows display language, and falls back to Japanese if there is no translation for it.
 
 | Language | File |
 |---|---|
@@ -18,12 +18,12 @@ If there is no translation for that language, it falls back to Japanese.
    - Do **not** change `name="…"`.
    - Keep placeholders such as `{0}` and `{1}`.
    - Set `WebViewLanguage` to the same tag as the folder name.
-3. Build the app. No code or manifest change is needed: the package picks up every folder under `Strings/`.
+3. Build the app. No code or manifest change is needed: the package picks up every folder under `Strings/`,
+   and the new language appears in **View → Language** under its own name.
 4. Run the tests (`dotnet test tests/MDV.Core.Tests`). They fail if a language file is missing a key,
    has an extra key, or drops a placeholder.
 
-To try a translation without changing your Windows language, add the language in
-**Settings → Time & language → Language & region** and move it to the top.
+To try a translation, choose it in **View → Language** and restart the app.
 
 ## Adding or changing a UI string (for developers)
 

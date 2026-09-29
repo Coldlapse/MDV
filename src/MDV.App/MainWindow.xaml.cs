@@ -37,7 +37,56 @@ public sealed partial class MainWindow : Window
 
         AppWindow.SetIcon("Assets/AppIcon.ico");
 
+        // WebView2初期化(LoadSettings)より前に閉じられても、保存済みの表示言語を消さないよう先に読み込む
+        try { _settings = SettingsService.Load(); } catch { _settings = new AppSettings(); }
+        BuildLanguageMenu();
+
         this.Closed += (s, e) => PersistSettings();
+    }
+
+    // [表示]→[言語]: 「システムに合わせる」＋翻訳のある各言語(その言語自身の名称で表示)
+    private void BuildLanguageMenu()
+    {
+        LanguageMenu.Items.Clear();
+        var options = new List<(string Tag, string Label)> { ("", Localizer.Get("MenuLanguageSystem")) };
+        options.AddRange(Localizer.AvailableLanguages().Select(tag => (tag, Localizer.NativeName(tag))));
+        foreach (var (tag, label) in options)
+        {
+            var item = new RadioMenuFlyoutItem
+            {
+                Text = label,
+                GroupName = "Language",
+                IsChecked = string.Equals(tag, _settings.Language ?? "", StringComparison.OrdinalIgnoreCase)
+            };
+            item.Click += (s, e) => OnLanguageSelected(tag);
+            LanguageMenu.Items.Add(item);
+        }
+    }
+
+    // 表示言語を保存し、再起動を促す（メニュー等のUI文字列は起動時に読み込まれるため、反映には再起動が必要）
+    private async void OnLanguageSelected(string tag)
+    {
+        if (string.Equals(tag, _settings.Language ?? "", StringComparison.OrdinalIgnoreCase)) return;
+        _settings.Language = tag;
+        PersistSettings();
+        Localizer.ApplyLanguageOverride(tag);
+
+        var dialog = new ContentDialog
+        {
+            Title = Localizer.Get("LanguageRestartTitle"),
+            Content = Localizer.Get("LanguageRestartMessage"),
+            PrimaryButtonText = Localizer.Get("LanguageRestartNow"),
+            CloseButtonText = Localizer.Get("LanguageRestartLater"),
+            DefaultButton = ContentDialogButton.Primary,
+            XamlRoot = this.Content.XamlRoot,
+            RequestedTheme = (this.Content as FrameworkElement)?.RequestedTheme ?? ElementTheme.Default
+        };
+        if (await dialog.ShowAsync() != ContentDialogResult.Primary) return;
+
+        PersistSettings();
+        // 開いていたファイルは再起動後にもう一度開く（App.OnLaunched がコマンドライン引数を読む）
+        var args = _currentPath != null ? $"\"{_currentPath}\"" : "";
+        Microsoft.Windows.AppLifecycle.AppInstance.Restart(args);
     }
 
     // WebView2を初回利用時に1回だけ初期化し、vendorフォルダを仮想ホストにマッピングする

@@ -82,6 +82,26 @@
     <value>このアプリについて</value>
   </data>
 
+  <!-- [表示]→[言語] と、言語変更後の再起動確認 -->
+  <data name="MenuLanguage.Text" xml:space="preserve">
+    <value>言語</value>
+  </data>
+  <data name="MenuLanguageSystem" xml:space="preserve">
+    <value>システムに合わせる</value>
+  </data>
+  <data name="LanguageRestartTitle" xml:space="preserve">
+    <value>言語の変更</value>
+  </data>
+  <data name="LanguageRestartMessage" xml:space="preserve">
+    <value>変更はアプリの再起動後に反映されます。</value>
+  </data>
+  <data name="LanguageRestartNow" xml:space="preserve">
+    <value>今すぐ再起動</value>
+  </data>
+  <data name="LanguageRestartLater" xml:space="preserve">
+    <value>後で</value>
+  </data>
+
   <!-- 本文の右クリックメニュー -->
   <data name="ContextMenuReload" xml:space="preserve">
     <value>再読み込み</value>

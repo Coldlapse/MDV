@@ -26,3 +26,25 @@ public class AppSettingsTests
         Assert.Equal(ThemeMode.System, AppSettings.FromJson("not json {{{").Theme);
     }
 }
+
+public class AppSettingsLanguageTests
+{
+    [Fact] public void Language_defaults_to_system()
+    {
+        Assert.Equal("", new AppSettings().Language);
+    }
+
+    [Fact] public void Language_roundtrips_through_json()
+    {
+        var back = AppSettings.FromJson(new AppSettings { Language = "ko-KR" }.ToJson());
+        Assert.Equal("ko-KR", back.Language);
+    }
+
+    [Fact] public void Settings_saved_by_older_versions_use_system_language()
+    {
+        // Language が無い旧バージョンの保存値でも読み込めること
+        var back = AppSettings.FromJson("{\"Theme\":1,\"ZoomFactor\":1.2,\"ShowStatusBar\":true}");
+        Assert.Equal("", back.Language);
+        Assert.Equal(ThemeMode.Dark, back.Theme);
+    }
+}

@@ -43,6 +43,9 @@ public partial class App : Application
     /// <param name="args">Details about the launch request and process.</param>
     protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
     {
+        // 表示言語の指定は、UI文字列(x:Uid)を読み込むウィンドウ生成より前に適用する必要がある
+        MDV.App.Services.Localizer.ApplyLanguageOverride(MDV.App.Services.SettingsService.Load().Language);
+
         _window = new MainWindow();
         _window.Activate();
 
