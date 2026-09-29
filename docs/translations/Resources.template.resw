@@ -192,4 +192,13 @@
     <value>Could not load the third-party license information.</value>
     <comment>About dialog: shown instead of the license list if the file cannot be read. | ja: サードパーティ ライセンス情報を読み込めませんでした。</comment>
   </data>
+
+  <data name="AboutContributors" xml:space="preserve">
+    <value>Contributors</value>
+    <comment>About dialog: small label at the bottom, before the list of contributors. | ja: コントリビューター</comment>
+  </data>
+  <data name="AboutCreditTranslationEnKo" xml:space="preserve">
+    <value>English and Korean translation</value>
+    <comment>About dialog: what the contributor "Coldlapse" did. | ja: 英語・韓国語翻訳</comment>
+  </data>
 </root>

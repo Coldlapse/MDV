@@ -158,4 +158,11 @@
   <data name="AboutThirdPartyLoadError" xml:space="preserve">
     <value>サードパーティ ライセンス情報を読み込めませんでした。</value>
   </data>
+
+  <data name="AboutContributors" xml:space="preserve">
+    <value>コントリビューター</value>
+  </data>
+  <data name="AboutCreditTranslationEnKo" xml:space="preserve">
+    <value>英語・韓国語翻訳</value>
+  </data>
 </root>

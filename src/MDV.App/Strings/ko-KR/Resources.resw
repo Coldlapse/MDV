@@ -146,4 +146,11 @@
   <data name="AboutThirdPartyLoadError" xml:space="preserve">
     <value>타사 라이선스 정보를 불러올 수 없습니다.</value>
   </data>
+
+  <data name="AboutContributors" xml:space="preserve">
+    <value>기여자</value>
+  </data>
+  <data name="AboutCreditTranslationEnKo" xml:space="preserve">
+    <value>영어·한국어 번역</value>
+  </data>
 </root>
