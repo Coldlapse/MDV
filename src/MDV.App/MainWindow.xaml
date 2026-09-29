@@ -83,8 +83,8 @@
         <!-- 本文 -->
         <WebView2 x:Name="ContentView" Grid.Row="2"/>
 
-        <!-- ステータスバー -->
-        <Grid x:Name="StatusBar" Grid.Row="3" Padding="8,2" Background="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}">
+        <!-- ステータスバー(背景はウィンドウと同じ文書の背景色。本文との境目は細い区切り線のみ) -->
+        <Grid x:Name="StatusBar" Grid.Row="3" Padding="8,2" BorderThickness="0,1,0,0" BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
