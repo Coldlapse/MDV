@@ -12,14 +12,12 @@
   <style>
     body { margin: 0; }
     .markdown-body { box-sizing: border-box; max-width: 900px; margin: 0 auto; padding: 24px; }
-    /* 背景は透明にし、アプリのウィンドウ背景(Mica)をそのまま文書の背景にする。
-       github-markdown-css は本文・表の行・画像に固定の背景色(#ffffff / #0d1117)を塗るため、
-       それらも透明にしてウィンドウと文書の境目が出ないようにする
-       (縞模様の偶数行・コードブロック等の背景は残す)。 */
-    html, body,
-    .markdown-body,
-    .markdown-body table tr,
-    .markdown-body img { background-color: transparent; }
+    /* 文書の背景色(github-markdown-css の本文色)をページ全体に広げ、900px の本文列の外側も同じ色にする。
+       ウィンドウ側も同じ色で塗る(MainWindow.ApplyWindowBackground)ため、ウィンドウと文書の境目が出ない。
+       theme-system は prefers-color-scheme で判定する(ホストが WebView2 の配色をアプリのテーマに合わせている)。 */
+    html.theme-light, html.theme-system { background-color: #ffffff; }
+    html.theme-dark { background-color: #0d1117; }
+    @media (prefers-color-scheme: dark) { html.theme-system { background-color: #0d1117; } }
     /* コードブロック右上の「コピー」ボタン（ホバーで表示） */
     .markdown-body pre { position: relative; }
     .md-copy-btn {

@@ -42,6 +42,10 @@ public sealed partial class MainWindow : Window
         try { _settings = SettingsService.Load(); } catch { _settings = new AppSettings(); }
         BuildLanguageMenu();
 
+        // テーマ(「システムに合わせる」でのOS側の切替を含む)が変わるたびに、ウィンドウの背景を塗り直す
+        RootGrid.ActualThemeChanged += (s, e) => ApplyWindowBackground();
+        ApplyWindowBackground();
+
         this.Closed += (s, e) => PersistSettings();
     }
 
@@ -100,9 +104,8 @@ public sealed partial class MainWindow : Window
         var env = await CoreWebView2Environment.CreateWithOptionsAsync(null, null,
             new CoreWebView2EnvironmentOptions { Language = Localizer.Get("WebViewLanguage") });
         _webEnv = env;   // Aboutダイアログのライセンス表示でも同じ環境を使う
-        // 本文の背景を透明にし、ウィンドウの背景(Mica)がそのまま本文の背景になるようにする
-        // （本文側のCSSも背景を透明にしている。template.html 参照）。
-        // 初期化前に設定しないと、読み込み中に既定の背景色が一瞬見えてしまう
+        // WebView2自体の既定背景は透明にし、ページの読み込み前はウィンドウの背景(=文書の背景色)が見えるようにする。
+        // 初期化前に設定しないと、読み込み中に既定の白/黒が一瞬見えてしまう
         ContentView.DefaultBackgroundColor = Microsoft.UI.Colors.Transparent;
         await ContentView.EnsureCoreWebView2Async(env);
 
@@ -526,10 +529,21 @@ public sealed partial class MainWindow : Window
     private void OnExitClick(object s, RoutedEventArgs e) { PersistSettings(); Application.Current.Exit(); }
 
     // テーマを切り替え、ウィンドウ・トグルアイコン・WebView2本文へ反映する
+    // ウィンドウ(タイトルバー・メニューバーを含む)の背景を、文書の背景色(github-markdown-css の本文色)に合わせる。
+    // template.html でもページ全体を同じ色にしているため、ウィンドウと文書の境目が出ない
+    private void ApplyWindowBackground()
+    {
+        var dark = RootGrid.ActualTheme == ElementTheme.Dark;
+        RootGrid.Background = new Microsoft.UI.Xaml.Media.SolidColorBrush(dark
+            ? Windows.UI.Color.FromArgb(0xFF, 0x0D, 0x11, 0x17)    // github-markdown-dark の本文背景
+            : Windows.UI.Color.FromArgb(0xFF, 0xFF, 0xFF, 0xFF));  // github-markdown-light の本文背景
+    }
+
     private async void SetTheme(ThemeMode mode)
     {
         _currentTheme = mode;
         ThemeService.ApplyToWindow(this, mode);
+        ApplyWindowBackground();
         ThemeToggle.Content = ThemeService.ToggleIcon(mode);
         // WebView2側のCSSも切替
         if (_webReady)
