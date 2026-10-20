@@ -43,11 +43,18 @@ public static partial class Localizer
         try
         {
             var available = AvailableLanguages();
-            var tag = !string.IsNullOrEmpty(language) &&
-                      available.Any(l => string.Equals(l, language, StringComparison.OrdinalIgnoreCase))
-                ? language
-                : "";
-            ApplicationLanguages.PrimaryLanguageOverride = tag;
+            if (!string.IsNullOrEmpty(language) &&
+                available.Any(l => string.Equals(l, language, StringComparison.OrdinalIgnoreCase)))
+            {
+                ApplicationLanguages.PrimaryLanguageOverride = language;
+                return;
+            }
+            // Windowsの表示言語に従う。
+            // 言語指定は空文字では解除できず(E_INVALIDARG)、パッケージ実行時は前回の指定が保存されたまま残る。
+            // そのため起動のたびにWindowsの第一言語を指定し直す(翻訳が無い言語なら通常どおり次の候補・既定言語になる)。
+            var system = Windows.System.UserProfile.GlobalizationPreferences.Languages.FirstOrDefault();
+            if (!string.IsNullOrEmpty(system))
+                ApplicationLanguages.PrimaryLanguageOverride = system;
         }
         catch
         {
