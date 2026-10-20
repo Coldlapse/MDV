@@ -134,10 +134,14 @@ public sealed partial class MainWindow : Window
 
     // template.html 内のUI文字列プレースホルダ(コピーボタン)を表示言語の文字列に置き換える。
     // JSの文字列リテラルとして埋め込むため、JSONエンコード(引用符・</script>等をエスケープ)して渡す。
+    // JsonSerializer はRelease構成(リフレクション無効)で例外になるため、JsonEncodedText を使う。
     // 本文(Markdown)を埋め込む前のテンプレートに対して行うので、本文中の同じ文字列は置換されない。
     private static string LocalizeTemplate(string template) => template
-        .Replace("{{COPY_LABEL}}", System.Text.Json.JsonSerializer.Serialize(Localizer.Get("CopyButton")))
-        .Replace("{{COPIED_LABEL}}", System.Text.Json.JsonSerializer.Serialize(Localizer.Get("CopyButtonDone")));
+        .Replace("{{COPY_LABEL}}", ToJsString(Localizer.Get("CopyButton")))
+        .Replace("{{COPIED_LABEL}}", ToJsString(Localizer.Get("CopyButtonDone")));
+
+    private static string ToJsString(string value) =>
+        "\"" + System.Text.Json.JsonEncodedText.Encode(value).ToString() + "\"";
 
     // 外部リンク(http/https)はアプリ内WebView2で遷移させず、既定ブラウザで開く
     private static void OpenLinksExternally(CoreWebView2 core)
