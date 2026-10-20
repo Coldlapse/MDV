@@ -10,7 +10,7 @@
   <Identity
     Name="Coldlapse.MDV-i18n"
     Publisher="CN=Coldlapse"
-    Version="1.0.4.2" />
+    Version="1.0.4.3" />
 
   <mp:PhoneIdentity PhoneProductId="0683767B-4F12-4141-988F-644B8F93ED97" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
