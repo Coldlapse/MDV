@@ -1,4 +1,5 @@
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace MDV.Core.Models;
 
@@ -11,12 +12,19 @@ public class AppSettings
     /// <summary>UIの表示言語(BCP-47タグ)。空文字はWindowsの表示言語に合わせる</summary>
     public string Language { get; set; } = "";
 
-    public string ToJson() => JsonSerializer.Serialize(this);
+    // JSON変換はソース生成(AppSettingsJsonContext)で行う。Release構成(PublishTrimmed)では
+    // リフレクションによるJSON変換が無効になり、Serialize(this) が例外になって設定が保存されないため。
+    public string ToJson() => JsonSerializer.Serialize(this, AppSettingsJsonContext.Default.AppSettings);
 
     public static AppSettings FromJson(string? json)
     {
         if (string.IsNullOrWhiteSpace(json)) return new AppSettings();
-        try { return JsonSerializer.Deserialize<AppSettings>(json) ?? new AppSettings(); }
+        try { return JsonSerializer.Deserialize(json, AppSettingsJsonContext.Default.AppSettings) ?? new AppSettings(); }
         catch (JsonException) { return new AppSettings(); }
     }
+}
+
+[JsonSerializable(typeof(AppSettings))]
+internal partial class AppSettingsJsonContext : JsonSerializerContext
+{
 }
