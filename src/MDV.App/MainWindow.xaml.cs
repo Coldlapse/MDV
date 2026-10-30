@@ -688,12 +688,16 @@ public sealed partial class MainWindow : Window
     // [表示]→[拡大]/[縮小]のショートカットを登録する。WebView2にフォーカスがあるときは template.html の keydown が
     // 処理するが、それだけではメニューバー等にフォーカスがあると効かないため、ウィンドウ側にも登録する。
     // 記号キー(+ / -)は VirtualKey に名前が無いのでキーコードで指定する(187 = VK_OEM_PLUS, 189 = VK_OEM_MINUS)。
-    // テンキーの + / - も同じ操作にする
+    // テンキーの + / - も同じ操作にする。
+    // JIS 配列では + は ; キー(187)を Shift 付きで押すため、Ctrl+Shift+187 も登録する(文書側の ev.key === '+' と合わせる)
     private void AddZoomAccelerators()
     {
         foreach (var key in new[] { (Windows.System.VirtualKey)187, Windows.System.VirtualKey.Add })
             ZoomInItem.KeyboardAccelerators.Add(new Microsoft.UI.Xaml.Input.KeyboardAccelerator
                 { Key = key, Modifiers = Windows.System.VirtualKeyModifiers.Control });
+        ZoomInItem.KeyboardAccelerators.Add(new Microsoft.UI.Xaml.Input.KeyboardAccelerator
+            { Key = (Windows.System.VirtualKey)187,
+              Modifiers = Windows.System.VirtualKeyModifiers.Control | Windows.System.VirtualKeyModifiers.Shift });
         foreach (var key in new[] { (Windows.System.VirtualKey)189, Windows.System.VirtualKey.Subtract })
             ZoomOutItem.KeyboardAccelerators.Add(new Microsoft.UI.Xaml.Input.KeyboardAccelerator
                 { Key = key, Modifiers = Windows.System.VirtualKeyModifiers.Control });
